@@ -943,7 +943,7 @@ class MastodonClient private constructor(
             executeInstanceRequest().use { response: Response ->
                 if (!response.isSuccessful) return fallbackUrl
 
-                val streamingUrl: String? = response.body?.string()?.let { responseBody: String ->
+                val streamingUrl: String? = response.body.string().let { responseBody: String ->
                     val rawJsonObject = JSON_SERIALIZER
                         .parseToJsonElement(responseBody)
                         .jsonObject
