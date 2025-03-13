@@ -94,7 +94,7 @@ import javax.net.ssl.X509TrustManager
  */
 class MastodonClient private constructor(
     private val instanceName: String,
-    private val streamingUrl: String,
+    internal val streamingUrl: String,
     private val client: OkHttpClient,
     private val accessToken: String? = null,
     private val debug: Boolean = false,
