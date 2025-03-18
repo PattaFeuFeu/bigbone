@@ -939,11 +939,11 @@ class MastodonClient private constructor(
             this.debug = true
         }
 
-        private fun getStreamingApiUrl(fallbackUrl: String): String {
+        private fun getStreamingApiUrl(fallbackUrl: () -> String): String {
             executeInstanceRequest().use { response: Response ->
-                if (!response.isSuccessful) return fallbackUrl
+                if (!response.isSuccessful) return fallbackUrl()
 
-                val streamingUrl: String? = response.body?.string()?.let { responseBody: String ->
+                val streamingUrl: String? = response.body.string().let { responseBody: String ->
                     val rawJsonObject = JSON_SERIALIZER
                         .parseToJsonElement(responseBody)
                         .jsonObject
@@ -956,7 +956,7 @@ class MastodonClient private constructor(
                         ?.replace("wss:", "https:")
                 }
 
-                return streamingUrl ?: fallbackUrl
+                return streamingUrl ?: fallbackUrl()
             }
         }
 
@@ -1038,7 +1038,11 @@ class MastodonClient private constructor(
                 instanceVersion = getInstanceVersion(),
                 scheme = scheme,
                 port = port,
-                streamingUrl = getStreamingApiUrl(fallbackUrl = scheme + instanceName)
+                streamingUrl = getStreamingApiUrl(
+                    fallbackUrl = {
+                        HttpUrl.Builder().scheme(scheme).host(instanceName).toString()
+                    }
+                )
             )
         }
     }
