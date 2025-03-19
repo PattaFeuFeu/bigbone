@@ -24,6 +24,9 @@ class RxOAuthMethods(client: MastodonClient) {
      * @param clientId The client ID, obtained during app registration.
      * @param redirectUri Set a URI to redirect the user to. Must match one of the redirect_uris declared during app registration.
      * @param scope List of requested OAuth scopes, separated by spaces. Must be a subset of scopes declared during app registration.
+     * @param state Arbitrary value to pass through to your server when the user authorizes or rejects the authorization request.
+     * @param codeChallenge The PKCE code challenge for the authorization request.
+     * @param codeChallengeMethod Must currently be `S256`, as this is the only code challenge method that is supported by Mastodon for PKCE.
      * @param forceLogin Forces the user to re-login, which is necessary for authorizing with multiple accounts from the same instance.
      * @param languageCode The ISO 639-1 two-letter language code to use while rendering the authorization form.
      * @see <a href="https://docs.joinmastodon.org/methods/oauth/#authorize">Mastodon oauth API methods #authorize</a>
@@ -33,6 +36,9 @@ class RxOAuthMethods(client: MastodonClient) {
         clientId: String,
         redirectUri: String,
         scope: Scope? = null,
+        state: String? = null,
+        codeChallenge: String? = null,
+        codeChallengeMethod: String? = null,
         forceLogin: Boolean? = null,
         languageCode: String? = null
     ): Single<String> = Single.fromCallable {
@@ -40,6 +46,9 @@ class RxOAuthMethods(client: MastodonClient) {
             clientId,
             redirectUri,
             scope,
+            state,
+            codeChallenge,
+            codeChallengeMethod,
             forceLogin,
             languageCode
         )
@@ -51,6 +60,8 @@ class RxOAuthMethods(client: MastodonClient) {
      * @param clientSecret The client secret, obtained during app registration.
      * @param redirectUri Set a URI to redirect the user to. Must match one of the redirect_uris declared during app registration.
      * @param code A user authorization code, obtained via the URL received from getOAuthUrl()
+     * @param codeVerifier Required if PKCE is used during the authorization request. This is the code verifier which was used
+     *  to create the `codeChallenge` using the `codeChallengeMethod` for the authorization request.
      * @param scope Requested OAuth scopes. Must be equal to the scope requested from the user while obtaining [code].
      *  If not provided, defaults to read.
      * @see <a href="https://docs.joinmastodon.org/methods/oauth/#token">Mastodon oauth API methods #token</a>
@@ -61,6 +72,7 @@ class RxOAuthMethods(client: MastodonClient) {
         clientSecret: String,
         redirectUri: String,
         code: String,
+        codeVerifier: String? = null,
         scope: Scope? = null
     ): Single<Token> = Single.fromCallable {
         oAuthMethods.getUserAccessTokenWithAuthorizationCodeGrant(
@@ -68,6 +80,7 @@ class RxOAuthMethods(client: MastodonClient) {
             clientSecret,
             redirectUri,
             code,
+            codeVerifier,
             scope
         ).execute()
     }

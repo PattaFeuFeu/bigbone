@@ -17,7 +17,21 @@ public class OAuthGetAccessToken {
 
         final MastodonClient client = new MastodonClient.Builder(instanceName).build();
         final Scope fullScope = new Scope(Scope.READ.ALL, Scope.WRITE.ALL, Scope.PUSH.ALL);
-        final String url = client.oauth().getOAuthUrl(clientId, redirectUri, fullScope);
+        final String state = "example_state";
+
+        // example values generated via: https://example-app.com/pkce,
+        // should be generated according to: https://oauth.net/2/pkce/
+        final String codeVerifier = "4d165eefac426b3e61ef652b7b44d63aad113b0540ad25f5f10bc935";
+        final String codeChallenge = "LYcAAS1MRj9aDDd1cgPxku0YgFtJFH6_3_RGCWZGvOc";
+
+        final String url = client.oauth().getOAuthUrl(
+                clientId,
+                redirectUri,
+                fullScope,
+                state,
+                codeChallenge,
+                "S256" // currently no other method supported
+        );
         System.out.println("Open authorization page and copy code:");
         System.out.println(url);
         System.out.println("Paste code:");
@@ -30,6 +44,7 @@ public class OAuthGetAccessToken {
                 clientSecret,
                 redirectUri,
                 authCode,
+                codeVerifier,
                 fullScope);
 
         System.out.println("Access Token:");
