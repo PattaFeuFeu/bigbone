@@ -40,6 +40,7 @@ comments:
   UndocumentedPublicClass:
     active: true
     excludes: ['**/test/**', '**/sample/**']
+    ignoreDefaultCompanionObject: true
   UndocumentedPublicFunction:
     active: false    # ***** ENABLE! *****
     excludes: ['**/test/**']
