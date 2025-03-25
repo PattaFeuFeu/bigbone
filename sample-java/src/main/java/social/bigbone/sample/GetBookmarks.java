@@ -8,6 +8,8 @@ import social.bigbone.api.exception.BigBoneRequestException;
 public class GetBookmarks {
     public static void main(final String[] args) throws BigBoneRequestException {
         final String instance = args[0];
+
+        // access token with at least Scope.READ.BOOKMARKS
         final String accessToken = args[1];
 
         // Instantiate client

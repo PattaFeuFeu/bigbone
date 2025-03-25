@@ -13,6 +13,10 @@ object Authenticator {
     private const val CLIENT_SECRET = "client_secret"
     private const val ACCESS_TOKEN = "access_token"
     private const val REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob"
+
+    // Request all non-admin scopes during app registration and while getting the user access token,
+    // because individual samples might require any or all of them. Generally, an app should request
+    // the minimum necessary for its intended functionality.
     private val fullScope = Scope(Scope.READ.ALL, Scope.WRITE.ALL, Scope.PUSH.ALL)
 
     fun appRegistrationIfNeeded(instanceName: String, credentialFilePath: String): MastodonClient {

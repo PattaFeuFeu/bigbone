@@ -12,11 +12,9 @@ import java.util.NoSuchElementException;
 public class GetDirectoryAccounts {
     public static void main(final String[] args) throws BigBoneRequestException {
         final String instance = args[0];
-        final String accessToken = args[1];
 
         // instantiate client
         final MastodonClient client = new MastodonClient.Builder(instance)
-                .accessToken(accessToken)
                 .build();
 
         // get 40 local accounts that were recently active, skipping the first ten

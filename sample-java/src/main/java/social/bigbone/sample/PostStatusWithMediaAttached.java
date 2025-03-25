@@ -13,6 +13,8 @@ import java.util.List;
 public class PostStatusWithMediaAttached {
     public static void main(final String[] args) throws BigBoneRequestException {
         final String instance = args[0];
+
+        // access token with at least Scope.WRITE.MEDIA and Scope.WRITE.STATUSES
         final String accessToken = args[1];
 
         // Instantiate client

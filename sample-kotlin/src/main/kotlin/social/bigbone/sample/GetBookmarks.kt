@@ -6,6 +6,8 @@ object GetBookmarks {
     @JvmStatic
     fun main(args: Array<String>) {
         val instance = args[0]
+
+        // access token with at least Scope.READ.BOOKMARKS
         val accessToken = args[1]
 
         // instantiate client
