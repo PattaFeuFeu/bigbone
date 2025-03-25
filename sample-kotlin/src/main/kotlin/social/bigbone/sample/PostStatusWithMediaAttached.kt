@@ -9,6 +9,8 @@ object PostStatusWithMediaAttached {
     @JvmStatic
     fun main(args: Array<String>) {
         val instance = args[0]
+
+        // access token with at least Scope.WRITE.MEDIA and Scope.WRITE.STATUSES
         val accessToken = args[1]
 
         // Instantiate client

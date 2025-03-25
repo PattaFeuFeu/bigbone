@@ -13,6 +13,8 @@ object RxStreamPublicTimeline {
     @JvmStatic
     fun main(args: Array<String>) {
         val instanceName = args[0]
+
+        // access token with at least Scope.READ.STATUSES
         val accessToken = args[1]
 
         // require authentication even if public streaming

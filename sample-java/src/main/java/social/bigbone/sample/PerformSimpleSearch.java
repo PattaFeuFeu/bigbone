@@ -7,7 +7,10 @@ import social.bigbone.api.exception.BigBoneRequestException;
 public class PerformSimpleSearch {
     public static void main(final String[] args) throws BigBoneRequestException {
         final String instance = args[0];
+
+        // access token with at least Scope.READ.STATUSES (or none for some parameter combinations)
         final String accessToken = args[1];
+
         final String searchTerm = args[2];
 
         // Instantiate client

@@ -14,7 +14,11 @@ object OAuthGetAccessToken {
         val clientSecret = args[2]
         val redirectUri = args[3]
         val client = MastodonClient.Builder(instanceName).build()
+
+        // Request all non-admin scopes while getting a user access token, because individual samples might require
+        // any or all of them. Generally, an app should request the minimum necessary for its intended functionality.
         val fullScope = Scope(Scope.READ.ALL, Scope.WRITE.ALL, Scope.PUSH.ALL)
+
         val state = "example_state"
 
         // example values generated via: https://example-app.com/pkce,

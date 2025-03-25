@@ -19,7 +19,10 @@ import java.util.List;
 public class ManageFilters {
     public static void main(final String[] args) throws BigBoneRequestException {
         final String instance = args[0];
+
+        // access token with at least Scope.READ.FILTERS and Scope.WRITE.FILTERS
         final String accessToken = args[1];
+
         final String action = args[2];
 
         // Instantiate client

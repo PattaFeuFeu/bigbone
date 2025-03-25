@@ -6,7 +6,10 @@ object PerformSimpleSearch {
     @JvmStatic
     fun main(args: Array<String>) {
         val instance = args[0]
+
+        // access token with at least Scope.READ.STATUSES (or none for some parameter combinations)
         val accessToken = args[1]
+
         val searchTerm = args[2]
 
         // Instantiate client

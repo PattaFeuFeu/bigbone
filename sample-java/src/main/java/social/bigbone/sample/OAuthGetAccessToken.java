@@ -16,7 +16,11 @@ public class OAuthGetAccessToken {
         final String redirectUri = args[3];
 
         final MastodonClient client = new MastodonClient.Builder(instanceName).build();
+
+        // Request all non-admin scopes while getting a user access token, because individual samples might require
+        // any or all of them. Generally, an app should request the minimum necessary for its intended functionality.
         final Scope fullScope = new Scope(Scope.READ.ALL, Scope.WRITE.ALL, Scope.PUSH.ALL);
+
         final String state = "example_state";
 
         // example values generated via: https://example-app.com/pkce,

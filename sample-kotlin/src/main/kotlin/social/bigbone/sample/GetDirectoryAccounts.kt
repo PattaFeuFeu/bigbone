@@ -8,11 +8,9 @@ object GetDirectoryAccounts {
     @JvmStatic
     fun main(args: Array<String>) {
         val instance = args[0]
-        val accessToken = args[1]
 
         // instantiate client
         val client = MastodonClient.Builder(instance)
-            .accessToken(accessToken)
             .build()
 
         // get 40 local accounts that were recently active, skipping the first ten

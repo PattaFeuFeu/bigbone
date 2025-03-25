@@ -7,6 +7,8 @@ import social.bigbone.api.exception.BigBoneRequestException;
 public class GetMarkers {
     public static void main(final String[] args) throws BigBoneRequestException {
         final String instance = args[0];
+
+        // access token with at least Scope.READ.STATUSES
         final String accessToken = args[1];
 
         // Instantiate client
