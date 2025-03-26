@@ -199,7 +199,8 @@ data class Status(
     val isPinned: Boolean = false,
 
     /**
-     * If the current token has an authorized user: The filter and keywords that matched this status. (optional)
+     * The filter and keywords that matched this status. If no filters matched, this list will be empty.
+     * May be null if the current token does not have an authorized user. (optional)
      */
     @SerialName("filtered")
     val filtered: List<FilterResult>? = null
