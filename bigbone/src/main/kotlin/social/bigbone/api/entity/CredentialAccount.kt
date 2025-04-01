@@ -10,8 +10,8 @@ import social.bigbone.api.entity.data.Visibility
 import social.bigbone.api.method.AccountMethods
 
 /**
- * Represents a user of Mastodon and their associated profile.
- *
+ * Represents a user of Mastodon and their associated profile, as returned by certain Mastodon endpoints.
+ * To use as a standard [Account], call [toAccount].
  * @see <a href="https://docs.joinmastodon.org/entities/Account/#CredentialAccount">Mastodon API Account#CredentialAccount</a>
  */
 @Serializable
@@ -95,7 +95,7 @@ data class CredentialAccount(
      * Additional metadata attached to a profile as name-value pairs.
      */
     @SerialName("fields")
-    val fields: List<Field> = emptyList(),
+    val fields: List<Account.Field> = emptyList(),
 
     /**
      * Custom emoji entities to be used when rendering the profile.
@@ -194,32 +194,6 @@ data class CredentialAccount(
     val role: Role? = null
 ) {
     /**
-     * Specifies a name-value pair as used in [fields] of the [CredentialAccount] entity.
-     */
-    @Serializable
-    data class Field(
-        /**
-         * The key of a given field’s key-value pair.
-         */
-        @SerialName("name")
-        val name: String = "",
-
-        /**
-         * The value associated with the [name] key (HTML string).
-         */
-        @SerialName("value")
-        val value: String = "",
-
-        /**
-         * Timestamp of when the server verified a URL value for a rel=“me” link.
-         * [InvalidPrecisionDateTime.Unavailable] if [value] is a verified URL.
-         */
-        @SerialName("verified_at")
-        @Serializable(with = DateTimeSerializer::class)
-        val verifiedAt: PrecisionDateTime = InvalidPrecisionDateTime.Unavailable
-    )
-
-    /**
      * An extra attribute that contains source values
      * to be used with API methods that [AccountMethods.verifyCredentials] and [AccountMethods.updateCredentials].
      * @see source
@@ -237,7 +211,7 @@ data class CredentialAccount(
          * Metadata about the account.
          */
         @SerialName("fields")
-        val fields: List<Field>,
+        val fields: List<Account.Field>,
 
         /**
          * The default post privacy to be used for new statuses.
@@ -264,4 +238,37 @@ data class CredentialAccount(
         @SerialName("follow_requests_count")
         val followRequestsCount: Int
     )
+
+    /**
+     * Returns an [Account] entity with the same attributes as this.
+     */
+    fun toAccount(): Account {
+        return Account(
+            id = id,
+            username = username,
+            acct = acct,
+            url = url,
+            displayName = displayName,
+            note = note,
+            avatar = avatar,
+            avatarStatic = avatarStatic,
+            header = header,
+            headerStatic = headerStatic,
+            isLocked = isLocked,
+            fields = fields,
+            emojis = emojis,
+            isBot = isBot,
+            isGroup = isGroup,
+            isDiscoverable = isDiscoverable,
+            isNotIndexed = isNotIndexed,
+            moved = moved?.toAccount(),
+            isSuspended = isSuspended,
+            isLimited = isLimited,
+            createdAt = createdAt,
+            lastStatusAt = lastStatusAt,
+            statusesCount = statusesCount,
+            followersCount = followersCount,
+            followingCount = followingCount,
+        )
+    }
 }

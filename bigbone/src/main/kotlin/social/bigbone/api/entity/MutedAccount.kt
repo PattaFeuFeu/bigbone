@@ -8,11 +8,12 @@ import social.bigbone.PrecisionDateTime.InvalidPrecisionDateTime
 import social.bigbone.PrecisionDateTime.ValidPrecisionDateTime.ExactTime
 
 /**
- * Represents a user of Mastodon and their associated profile.
- * @see <a href="https://docs.joinmastodon.org/entities/Account/">Mastodon API Account</a>
+ * Represents a user of Mastodon and their associated profile, as returned by certain Mastodon endpoints.
+ * To use as a standard [Account], call [toAccount].
+ * @see <a href="https://docs.joinmastodon.org/entities/Account/#MutedAccount">Mastodon API Account#MutedAccount</a>
  */
 @Serializable
-data class Account(
+data class MutedAccount(
     /**
      * The account id.
      * String cast from an Integer, but not guaranteed to be a number.
@@ -92,7 +93,7 @@ data class Account(
      * Additional metadata attached to a profile as name-value pairs.
      */
     @SerialName("fields")
-    val fields: List<Field> = emptyList(),
+    val fields: List<Account.Field> = emptyList(),
 
     /**
      * Custom emoji entities to be used when rendering the profile.
@@ -175,31 +176,45 @@ data class Account(
      * The reported follows of this profile.
      */
     @SerialName("following_count")
-    val followingCount: Long = 0
+    val followingCount: Long = 0,
+
+    /**
+     * When a timed mute will expire, if applicable.
+     */
+    @SerialName("mute_expires_at")
+    @Serializable(with = DateTimeSerializer::class)
+    val muteExpiresAt: PrecisionDateTime = InvalidPrecisionDateTime.Unavailable
 ) {
     /**
-     * Specifies a name-value pair as used in [fields] of the [Account] entity.
+     * Returns an [Account] entity with the same attributes as this.
      */
-    @Serializable
-    data class Field(
-        /**
-         * The key of a given field’s key-value pair.
-         */
-        @SerialName("name")
-        val name: String = "",
-
-        /**
-         * The value associated with the [name] key (HTML string).
-         */
-        @SerialName("value")
-        val value: String = "",
-
-        /**
-         * Timestamp of when the server verified a URL value for a rel=“me” link.
-         * [InvalidPrecisionDateTime.Unavailable] if [value] is not a verified URL.
-         */
-        @SerialName("verified_at")
-        @Serializable(with = DateTimeSerializer::class)
-        val verifiedAt: PrecisionDateTime = InvalidPrecisionDateTime.Unavailable
-    )
+    fun toAccount(): Account {
+        return Account(
+            id = id,
+            username = username,
+            acct = acct,
+            url = url,
+            displayName = displayName,
+            note = note,
+            avatar = avatar,
+            avatarStatic = avatarStatic,
+            header = header,
+            headerStatic = headerStatic,
+            isLocked = isLocked,
+            fields = fields,
+            emojis = emojis,
+            isBot = isBot,
+            isGroup = isGroup,
+            isDiscoverable = isDiscoverable,
+            isNotIndexed = isNotIndexed,
+            moved = moved,
+            isSuspended = isSuspended,
+            isLimited = isLimited,
+            createdAt = createdAt,
+            lastStatusAt = lastStatusAt,
+            statusesCount = statusesCount,
+            followersCount = followersCount,
+            followingCount = followingCount,
+        )
+    }
 }
