@@ -4,7 +4,7 @@ import social.bigbone.MastodonClient
 import social.bigbone.MastodonRequest
 import social.bigbone.api.Pageable
 import social.bigbone.api.Range
-import social.bigbone.api.entity.Account
+import social.bigbone.api.entity.MutedAccount
 
 /**
  * Allows access to API methods with endpoints having an "api/vX/mutes" prefix.
@@ -20,7 +20,7 @@ class MuteMethods(private val client: MastodonClient) {
      * @see <a href="https://docs.joinmastodon.org/methods/mutes/#get">Mastodon API documentation: methods/mutes/#get</a>
      */
     @JvmOverloads
-    fun getMutes(range: Range = Range()): MastodonRequest<Pageable<Account>> {
+    fun getMutes(range: Range = Range()): MastodonRequest<Pageable<MutedAccount>> {
         return client.getPageableMastodonRequest(
             endpoint = endpoint,
             method = MastodonClient.Method.GET,
