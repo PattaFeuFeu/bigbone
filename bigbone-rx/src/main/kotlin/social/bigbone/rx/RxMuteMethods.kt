@@ -4,7 +4,7 @@ import io.reactivex.rxjava3.core.Single
 import social.bigbone.MastodonClient
 import social.bigbone.api.Pageable
 import social.bigbone.api.Range
-import social.bigbone.api.entity.Account
+import social.bigbone.api.entity.MutedAccount
 import social.bigbone.api.method.MuteMethods
 
 /**
@@ -22,7 +22,7 @@ class RxMuteMethods(client: MastodonClient) {
      * @see <a href="https://docs.joinmastodon.org/methods/mutes/#get">Mastodon API documentation: methods/mutes/#get</a>
      */
     @JvmOverloads
-    fun getMutes(range: Range = Range()): Single<Pageable<Account>> = Single.fromCallable {
+    fun getMutes(range: Range = Range()): Single<Pageable<MutedAccount>> = Single.fromCallable {
         muteMethods.getMutes(range).execute()
     }
 }
