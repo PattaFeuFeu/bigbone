@@ -5,6 +5,7 @@ import org.amshove.kluent.shouldBeInstanceOf
 import org.junit.jupiter.api.Test
 import social.bigbone.JSON_SERIALIZER
 import social.bigbone.PrecisionDateTime
+import social.bigbone.api.entity.data.Visibility
 import social.bigbone.testtool.AssetsUtil
 
 class AccountsTest {
@@ -35,6 +36,22 @@ class AccountsTest {
         list[1].muteExpiresAt shouldBeInstanceOf PrecisionDateTime.InvalidPrecisionDateTime.Unavailable::class
         list[2].id shouldBeEqualTo "33333"
         list[2].muteExpiresAt shouldBeInstanceOf PrecisionDateTime.InvalidPrecisionDateTime.Unavailable::class
+    }
+
+    @Test
+    fun deserializeCredentialAccount() {
+        // given a JSON string containing valid CredentialAccount data
+        val json = AssetsUtil.readFromAssets("credential_account.json")
+
+        // when parsing as a CredentialAccount
+        val credentialAccount: CredentialAccount = JSON_SERIALIZER.decodeFromString(json)
+
+        // then retrieving CredentialAccount data should be possible
+        credentialAccount.attributionDomains.size shouldBeEqualTo 2
+        credentialAccount.attributionDomains.first() shouldBeEqualTo "example.com"
+        credentialAccount.source.note.startsWith("Lorem ipsum dolor sit amet") shouldBeEqualTo true
+        credentialAccount.source.privacy shouldBeEqualTo Visibility.PUBLIC
+        credentialAccount.source.fields.first().name shouldBeEqualTo "Website"
     }
 
     @Test

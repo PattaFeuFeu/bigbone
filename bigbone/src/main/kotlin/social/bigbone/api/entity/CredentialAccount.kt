@@ -181,6 +181,12 @@ data class CredentialAccount(
     val followingCount: Long = 0,
 
     /**
+     * Domains of websites allowed to credit the account.
+     */
+    @SerialName("attribution_domains")
+    val attributionDomains: List<String> = emptyList(),
+
+    /**
      * An extra attribute that contains source values
      * to be used with API methods that [AccountMethods.verifyCredentials] and [AccountMethods.updateCredentials].
      */
