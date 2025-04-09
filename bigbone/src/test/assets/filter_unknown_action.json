@@ -1,0 +1,17 @@
+{
+  "id": "12345",
+  "title": "Don't look at explosions",
+  "context": [
+    "public"
+  ],
+  "expires_at": null,
+  "filter_action": "explode",
+  "keywords": [
+    {
+      "id": "1234",
+      "keyword": "Booooom!",
+      "whole_word": true
+    }
+  ],
+  "statuses": []
+}

@@ -28,6 +28,7 @@ public class GetHomeTimelineWithFiltering {
             // determine if we need to hide the status or just warn about it
             AtomicBoolean shouldWarn = new AtomicBoolean(false);
             AtomicBoolean shouldHide = new AtomicBoolean(false);
+            AtomicBoolean shouldBlur = new AtomicBoolean(false);
             if (status.getFiltered() != null) {
                 status.getFiltered().forEach(filterResult -> {
                     Filter filter = filterResult.getFilter();
@@ -41,6 +42,9 @@ public class GetHomeTimelineWithFiltering {
                         }
                         if (filter.getFilterAction().equals(Filter.FilterAction.HIDE)) {
                             shouldHide.set(true);
+                        }
+                        if (filter.getFilterAction().equals(Filter.FilterAction.BLUR)) {
+                            shouldBlur.set(true);
                         }
 
                     }
@@ -61,8 +65,14 @@ public class GetHomeTimelineWithFiltering {
                     System.out.println("* WARNING * status by " + name + " matches one or more of your filters");
                     System.out.println("********************************************************************************");
                 } else {
-                    final String content = status.getContent();
-                    System.out.println(name + " posted: " + content);
+                    if (shouldBlur.get()) {
+                        System.out.println("********************************************************************************");
+                        System.out.println("* WARNING * status by ~~~~~~~~~~~~~~~~~~~~~~ matches one or more of your filters");
+                        System.out.println("********************************************************************************");
+                    } else {
+                        final String content = status.getContent();
+                        System.out.println(name + " posted: " + content);
+                    }
                 }
             }
         });

@@ -20,9 +20,10 @@ object GetHomeTimelineWithFiltering {
         val statuses = client.timelines.getHomeTimeline().execute()
         statuses.part.forEach { status ->
 
-            // determine if we need to hide the status or just warn about it
+            // determine if we need to hide the status, blur it or just warn about it
             var shouldWarn = false
             var shouldHide = false
+            var shouldBlur = false
             status.filtered?.let { filterResultList ->
                 filterResultList.forEach {
                     val filter = it.filter
@@ -33,6 +34,7 @@ object GetHomeTimelineWithFiltering {
                         when (filter.filterAction) {
                             Filter.FilterAction.WARN -> shouldWarn = true
                             Filter.FilterAction.HIDE -> shouldHide = true
+                            Filter.FilterAction.BLUR -> shouldBlur = true
                         }
                     }
                 }
@@ -48,7 +50,13 @@ object GetHomeTimelineWithFiltering {
                     println("* WARNING * status by ${status.account?.displayName} matches one or more of your filters")
                     println("********************************************************************************")
                 } else {
-                    println("${status.account?.displayName} posted: ${status.content.take(50)}")
+                    if (shouldBlur) {
+                        println("********************************************************************************")
+                        println("* WARNING * status by ~~~~~~~~~~~~~~~~~~~~~~ matches one or more of your filters")
+                        println("********************************************************************************")
+                    } else {
+                        println("${status.account?.displayName} posted: ${status.content.take(50)}")
+                    }
                 }
             }
         }
