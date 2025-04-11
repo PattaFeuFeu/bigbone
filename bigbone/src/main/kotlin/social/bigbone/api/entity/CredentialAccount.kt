@@ -182,6 +182,7 @@ data class CredentialAccount(
 
     /**
      * Domains of websites allowed to credit the account.
+     * @since Mastodon 4.4.0
      */
     @SerialName("attribution_domains")
     val attributionDomains: List<String> = emptyList(),
