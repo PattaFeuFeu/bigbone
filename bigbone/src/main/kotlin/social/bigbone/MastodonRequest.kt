@@ -88,7 +88,7 @@ class MastodonRequest<T>(
                 val error = JSON_SERIALIZER.decodeFromString<Error>(response.body.string())
                 response.close()
                 throw BigBoneRequestException(response, error)
-            } catch (e: Exception) {
+            } catch (e: IllegalArgumentException) {
                 throw BigBoneRequestException("Request failed with unparseable error response", e)
             }
         }
