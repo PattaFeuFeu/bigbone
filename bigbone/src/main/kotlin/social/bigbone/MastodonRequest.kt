@@ -84,9 +84,13 @@ class MastodonRequest<T>(
                 throw BigBoneRequestException("Successful response could not be parsed", e)
             }
         } else {
-            val error = JSON_SERIALIZER.decodeFromString<Error>(response.body.string())
-            response.close()
-            throw BigBoneRequestException(response, error)
+            try {
+                val error = JSON_SERIALIZER.decodeFromString<Error>(response.body.string())
+                response.close()
+                throw BigBoneRequestException(response, error)
+            } catch (e: IllegalArgumentException) {
+                throw BigBoneRequestException("Request failed with unparseable error response", e)
+            }
         }
     }
 }
