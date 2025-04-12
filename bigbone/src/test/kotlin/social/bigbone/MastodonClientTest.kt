@@ -45,7 +45,7 @@ class MastodonClientTest {
                 every { isSuccessful } answers { true }
                 every { close() } returns Unit
             }
-            every { executeInstanceRequest() } answers { responseMock }
+            every { executeInstanceRequest(any()) } answers { responseMock }
         }
             .withHttpsDisabled()
             .withPort(port)
@@ -72,7 +72,7 @@ class MastodonClientTest {
                 every { isSuccessful } answers { true }
                 every { close() } returns Unit
             }
-            every { executeInstanceRequest() } answers { responseMock }
+            every { executeInstanceRequest(any()) } answers { responseMock }
         }
 
         invoking(clientBuilder::build)
@@ -99,7 +99,7 @@ class MastodonClientTest {
                 every { isSuccessful } answers { false }
                 every { close() } returns Unit
             }
-            every { executeInstanceRequest() } answers { responseMock }
+            every { executeInstanceRequest(any()) } answers { responseMock }
         }
             .withHttpsDisabled()
             .withPort(port)
@@ -125,7 +125,7 @@ class MastodonClientTest {
                 every { isSuccessful } answers { false }
                 every { close() } returns Unit
             }
-            every { executeInstanceRequest() } answers { responseMock }
+            every { executeInstanceRequest(any()) } answers { responseMock }
         }
         invoking(clientBuilder::build)
             .shouldThrow(InstanceVersionRetrievalException::class)
@@ -171,7 +171,7 @@ class MastodonClientTest {
                 every { isSuccessful } answers { true }
                 every { close() } returns Unit
             }
-            every { executeInstanceRequest() } answers { responseMock }
+            every { executeInstanceRequest(any()) } answers { responseMock }
         }
 
         val mastodonClient = clientBuilder.build()
@@ -207,7 +207,7 @@ class MastodonClientTest {
                 every { isSuccessful } answers { true }
                 every { close() } returns Unit
             }
-            every { executeInstanceRequest() } answers { responseMock }
+            every { executeInstanceRequest(any()) } answers { responseMock }
         }
 
         val mastodonClient = clientBuilder.build()
@@ -232,7 +232,7 @@ class MastodonClientTest {
                 every { isSuccessful } answers { false }
                 every { close() } returns Unit
             }
-            every { executeInstanceRequest() } answers { responseMock }
+            every { executeInstanceRequest(any()) } answers { responseMock }
         }
 
         val mastodonClient = clientBuilder.build()

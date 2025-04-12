@@ -939,8 +939,8 @@ class MastodonClient private constructor(
             this.debug = true
         }
 
-        private fun getStreamingApiUrl(fallbackUrl: () -> String): String {
-            executeInstanceRequest().use { response: Response ->
+        private fun getStreamingApiUrl(httpClient: OkHttpClient, fallbackUrl: () -> String): String {
+            executeInstanceRequest(httpClient).use { response: Response ->
                 if (!response.isSuccessful) return fallbackUrl()
 
                 val streamingUrl: String? = response.body.string().let { responseBody: String ->
@@ -995,12 +995,8 @@ class MastodonClient private constructor(
          * via [ResponseBody.string], or by calling [Response.close].
          * @return Server response as [Response] for this request
          */
-        internal fun executeInstanceRequest(): Response {
-            val clientBuilder = OkHttpClient.Builder()
-            if (trustAllCerts) configureForTrustAll(clientBuilder)
-
-            return clientBuilder
-                .build()
+        internal fun executeInstanceRequest(httpClient: OkHttpClient): Response {
+            return httpClient
                 .newCall(
                     Request.Builder()
                         .url(
@@ -1025,20 +1021,23 @@ class MastodonClient private constructor(
          * connection are _not_ caught by this library.
          */
         fun build(): MastodonClient {
+            val httpClient = okHttpClientBuilder
+                .addNetworkInterceptor(AuthorizationInterceptor(accessToken))
+                .readTimeout(readTimeoutSeconds, TimeUnit.SECONDS)
+                .writeTimeout(writeTimeoutSeconds, TimeUnit.SECONDS)
+                .connectTimeout(connectTimeoutSeconds, TimeUnit.SECONDS)
+                .build()
+
             return MastodonClient(
                 instanceName = instanceName,
-                client = okHttpClientBuilder
-                    .addNetworkInterceptor(AuthorizationInterceptor(accessToken))
-                    .readTimeout(readTimeoutSeconds, TimeUnit.SECONDS)
-                    .writeTimeout(writeTimeoutSeconds, TimeUnit.SECONDS)
-                    .connectTimeout(connectTimeoutSeconds, TimeUnit.SECONDS)
-                    .build(),
+                client = httpClient,
                 accessToken = accessToken,
                 debug = debug,
                 instanceVersion = getInstanceVersion(),
                 scheme = scheme,
                 port = port,
                 streamingUrl = getStreamingApiUrl(
+                    httpClient = httpClient,
                     fallbackUrl = {
                         HttpUrl.Builder().scheme(scheme).host(instanceName).toString()
                     }
