@@ -1,8 +1,6 @@
 package social.bigbone
 
-import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.contentOrNull
-import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.SerializationException
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Interceptor
@@ -17,6 +15,7 @@ import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import okio.ByteString
 import social.bigbone.api.Pageable
+import social.bigbone.api.entity.Instance
 import social.bigbone.api.entity.streaming.MastodonApiEvent.GenericMessage
 import social.bigbone.api.entity.streaming.MastodonApiEvent.StreamEvent
 import social.bigbone.api.entity.streaming.ParsedStreamEvent.Companion.toStreamEvent
@@ -28,6 +27,7 @@ import social.bigbone.api.entity.streaming.TechnicalEvent.Open
 import social.bigbone.api.entity.streaming.WebSocketCallback
 import social.bigbone.api.exception.BigBoneClientInstantiationException
 import social.bigbone.api.exception.BigBoneRequestException
+import social.bigbone.api.exception.InstanceRetrievalException
 import social.bigbone.api.exception.InstanceVersionRetrievalException
 import social.bigbone.api.method.AccountMethods
 import social.bigbone.api.method.AnnouncementMethods
@@ -95,6 +95,7 @@ import javax.net.ssl.X509TrustManager
 class MastodonClient private constructor(
     private val instanceName: String,
     internal val streamingUrl: String,
+    private val instance: Instance,
     private val client: OkHttpClient,
     private val accessToken: String? = null,
     private val debug: Boolean = false,
@@ -441,7 +442,6 @@ class MastodonClient private constructor(
     @Suppress("unused") // public API
     @get:JvmName("trends")
     val trends: TrendMethods by lazy { TrendMethods(this) }
-
     //endregion API methods
 
     /**
@@ -458,6 +458,8 @@ class MastodonClient private constructor(
     fun getInstanceName() = instanceName
 
     fun getInstanceVersion() = instanceVersion
+
+    fun getInstance(): Instance = instance
 
     fun getScheme() = scheme
 
@@ -939,25 +941,15 @@ class MastodonClient private constructor(
             this.debug = true
         }
 
-        private fun getStreamingApiUrl(httpClient: OkHttpClient, fallbackUrl: () -> String): String {
-            executeInstanceRequest(httpClient).use { response: Response ->
-                if (!response.isSuccessful) return fallbackUrl()
+        private fun getStreamingApiUrl(instance: Instance, fallbackUrl: () -> String): String {
+            val instanceStreamingUrl = instance.configuration.urls.streaming
+                .takeIf { it.isNotBlank() }
+                // okhttp’s HttpUrl which is used later to parse this result only allows http(s)
+                // so we need to replace ws(s) first
+                ?.replace("ws:", "http:")
+                ?.replace("wss:", "https:")
 
-                val streamingUrl: String? = response.body.string().let { responseBody: String ->
-                    val rawJsonObject = JSON_SERIALIZER
-                        .parseToJsonElement(responseBody)
-                        .jsonObject
-
-                    (rawJsonObject["configuration"]?.jsonObject?.get("urls")?.jsonObject?.get("streaming") as? JsonPrimitive)
-                        ?.contentOrNull
-                        // okhttp’s HttpUrl which is used later to parse this result only allows http(s)
-                        // so we need to replace ws(s) first
-                        ?.replace("ws:", "http:")
-                        ?.replace("wss:", "https:")
-                }
-
-                return streamingUrl ?: fallbackUrl()
-            }
+            return instanceStreamingUrl ?: fallbackUrl()
         }
 
         /**
@@ -1014,6 +1006,40 @@ class MastodonClient private constructor(
         }
 
         /**
+         * Tries to get an [Instance] from the instance API endpoint.
+         *
+         * @param httpClient the HTTP client to use for the request
+         *
+         * @return the [Instance] retrieved from the server
+         * @throws InstanceRetrievalException if Instance could not be parsed from the server response
+         */
+        private fun getInstance(httpClient: OkHttpClient): Instance {
+            executeInstanceRequest(httpClient).use { response: Response ->
+                if (response.isSuccessful) {
+                    val body: String = response.body.string()
+                    try {
+                        val instance: Instance = JSON_SERIALIZER.decodeFromString(body)
+                        return instance
+                    } catch (e: SerializationException) {
+                        throw InstanceRetrievalException(
+                            "Could not decode response from server into Instance: $body",
+                            e
+                        )
+                    } catch (e: IllegalArgumentException) {
+                        throw InstanceRetrievalException(
+                            "Response from server does not appear to be a valid Instance: $body",
+                            e
+                        )
+                    }
+                } else {
+                    throw InstanceRetrievalException(
+                        "Instance request failed with code ${response.code} and message ${response.message}"
+                    )
+                }
+            }
+        }
+
+        /**
          * Builds this MastodonClient.
          *
          * @throws BigBoneClientInstantiationException if the client could not be instantiated, likely due to an issue
@@ -1028,20 +1054,25 @@ class MastodonClient private constructor(
                 .connectTimeout(connectTimeoutSeconds, TimeUnit.SECONDS)
                 .build()
 
+            // Get instance version first as this may fail if the server doesn't appear to run Mastodon
+            val instanceVersion = getInstanceVersion()
+
+            val instance = getInstance(httpClient)
+            val streamingUrl = getStreamingApiUrl(
+                instance = instance,
+                fallbackUrl = HttpUrl.Builder().scheme(scheme).host(instanceName)::toString
+            )
+
             return MastodonClient(
                 instanceName = instanceName,
+                instance = instance,
                 client = httpClient,
                 accessToken = accessToken,
                 debug = debug,
-                instanceVersion = getInstanceVersion(),
+                instanceVersion = instanceVersion,
                 scheme = scheme,
                 port = port,
-                streamingUrl = getStreamingApiUrl(
-                    httpClient = httpClient,
-                    fallbackUrl = {
-                        HttpUrl.Builder().scheme(scheme).host(instanceName).toString()
-                    }
-                )
+                streamingUrl = streamingUrl
             )
         }
     }

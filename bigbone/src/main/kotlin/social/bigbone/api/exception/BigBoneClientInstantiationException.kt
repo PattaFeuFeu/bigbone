@@ -36,3 +36,9 @@ class ServerInfoUrlRetrievalException(response: Response, message: String? = nul
  * Exception thrown if we could not retrieve the instance version of a Mastodon server during [MastodonClient] instantiation.
  */
 class InstanceVersionRetrievalException(message: String, cause: Throwable? = null) : BigBoneClientInstantiationException(message, cause)
+
+/**
+ * Exception thrown if we could not retrieve the instance details of a Mastodon server during [MastodonClient] instantiation.
+ */
+class InstanceRetrievalException(message: String, cause: Throwable? = null) :
+    BigBoneClientInstantiationException(message, cause)
