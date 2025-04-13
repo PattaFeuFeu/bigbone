@@ -28,14 +28,18 @@ class ServerInfoRetrievalException : BigBoneClientInstantiationException {
 /**
  * Exception thrown if we could not successfully get the [NodeInfo] server URL during [MastodonClient] instantiation.
  */
-class ServerInfoUrlRetrievalException(response: Response, message: String? = null) : BigBoneClientInstantiationException(
+class ServerInfoUrlRetrievalException(
+    response: Response,
+    message: String? = null
+) : BigBoneClientInstantiationException(
     message = "${message ?: ""}${response.message}"
 )
 
 /**
- * Exception thrown if we could not retrieve the instance version of a Mastodon server during [MastodonClient] instantiation.
+ * Exception thrown if the server does not support the required features during [MastodonClient] instantiation.
  */
-class InstanceVersionRetrievalException(message: String, cause: Throwable? = null) : BigBoneClientInstantiationException(message, cause)
+class UnsupportedServerException(message: String, cause: Throwable? = null) :
+    BigBoneClientInstantiationException(message, cause)
 
 /**
  * Exception thrown if we could not retrieve the instance details of a Mastodon server during [MastodonClient] instantiation.
