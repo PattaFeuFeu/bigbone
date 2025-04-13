@@ -477,6 +477,14 @@ class MastodonClient private constructor(
     )
     fun getInstanceVersion() = getInstance().version
 
+    /**
+     * Gets the [Instance] retrieved during instantiation of the client through [Builder.build].
+     * The [Instance] kept here is stored in memory for the lifetime of the client instance and is NOT updated again.
+     *
+     * If you need up-to-date information about the instance, consider using the [InstanceMethods.getInstance]
+     * method to fetch the latest data. [InstanceMethods] are available via [instances] in this client.
+     * Calling [InstanceMethods.getInstance] will NOT automatically update the instance kept here.
+     */
     fun getInstance(): Instance = instance
 
     fun getScheme() = scheme
