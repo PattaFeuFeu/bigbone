@@ -13,7 +13,7 @@ class AppMethodsTest {
     @Test
     fun createApp() {
         val client: MastodonClient = MockClient.mock("application.json")
-        every { client.getInstanceName() } returns "mastodon.cloud"
+        every { client.getInstance().domain } returns "mastodon.cloud"
 
         val appMethods = AppMethods(client)
         val application = appMethods.createApp(
@@ -40,7 +40,7 @@ class AppMethodsTest {
     @Test
     fun verifyCredentials() {
         val client: MastodonClient = MockClient.mock("application_no_client_data.json")
-        every { client.getInstanceName() } returns "mastodon.cloud"
+        every { client.getInstance().domain } returns "mastodon.cloud"
 
         val appMethods = AppMethods(client)
         val application = appMethods.verifyCredentials().execute()

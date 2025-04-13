@@ -20,7 +20,7 @@ class OAuthMethodsTest {
     @Test
     fun getOAuthUrl() {
         val client: MastodonClient = mockk()
-        every { client.getInstanceName() } returns "mastodon.cloud"
+        every { client.getInstance().domain } returns "mastodon.cloud"
         every { client.getScheme() } returns "https"
         every { client.getPort() } returns 443
 
@@ -37,7 +37,7 @@ class OAuthMethodsTest {
     @Test
     fun getOAuthUrlWithoutScopeWithLanguageWithForceLogin() {
         val client: MastodonClient = mockk()
-        every { client.getInstanceName() } returns "mastodon.cloud"
+        every { client.getInstance().domain } returns "mastodon.cloud"
         every { client.getScheme() } returns "https"
         every { client.getPort() } returns 443
 
@@ -55,7 +55,7 @@ class OAuthMethodsTest {
     @Test
     fun getUserAccessTokenWithAuthorizationCodeGrant() {
         val client: MastodonClient = MockClient.mock("access_token.json")
-        every { client.getInstanceName() } returns "mastodon.cloud"
+        every { client.getInstance().domain } returns "mastodon.cloud"
         val oauth = OAuthMethods(client)
         val accessToken = oauth.getUserAccessTokenWithAuthorizationCodeGrant(
             clientId = "test",
@@ -73,7 +73,7 @@ class OAuthMethodsTest {
     fun getAccessTokenWithAuthorizationCodeGrantWithException() {
         Assertions.assertThrows(BigBoneRequestException::class.java) {
             val client: MastodonClient = MockClient.ioException()
-            every { client.getInstanceName() } returns "mastodon.cloud"
+            every { client.getInstance().domain } returns "mastodon.cloud"
             val oauth = OAuthMethods(client)
             oauth.getUserAccessTokenWithAuthorizationCodeGrant(
                 clientId = "test",
@@ -87,7 +87,7 @@ class OAuthMethodsTest {
     @Test
     fun getAccessTokenWithClientCredentialsGrant() {
         val client: MastodonClient = MockClient.mock("access_token.json")
-        every { client.getInstanceName() } returns "mastodon.cloud"
+        every { client.getInstance().domain } returns "mastodon.cloud"
         val oauth = OAuthMethods(client)
         val accessToken = oauth.getAccessTokenWithClientCredentialsGrant(
             clientId = "test",
@@ -104,7 +104,7 @@ class OAuthMethodsTest {
     fun getAccessTokenWithClientCredentialsGrantWithException() {
         Assertions.assertThrows(BigBoneRequestException::class.java) {
             val client: MastodonClient = MockClient.ioException()
-            every { client.getInstanceName() } returns "mastodon.cloud"
+            every { client.getInstance().domain } returns "mastodon.cloud"
             val oauth = OAuthMethods(client)
             oauth.getAccessTokenWithClientCredentialsGrant(
                 clientId = "test",
@@ -117,7 +117,7 @@ class OAuthMethodsTest {
     @Test
     fun getAccessTokenWithPasswordGrant() {
         val client: MastodonClient = MockClient.mock("access_token.json")
-        every { client.getInstanceName() } returns "mastodon.cloud"
+        every { client.getInstance().domain } returns "mastodon.cloud"
         val oauth = OAuthMethods(client)
         val accessToken = oauth.getUserAccessTokenWithPasswordGrant(
             "test",
@@ -136,7 +136,7 @@ class OAuthMethodsTest {
     fun getAccessTokenWithPasswordGrantWithException() {
         Assertions.assertThrows(BigBoneRequestException::class.java) {
             val client: MastodonClient = MockClient.ioException()
-            every { client.getInstanceName() } returns "mastodon.cloud"
+            every { client.getInstance().domain } returns "mastodon.cloud"
             val oauth = OAuthMethods(client)
             oauth.getUserAccessTokenWithPasswordGrant(
                 clientId = "test",

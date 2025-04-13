@@ -56,7 +56,7 @@ class OAuthMethods(private val client: MastodonClient) {
         return MastodonClient
             .fullUrl(
                 scheme = client.getScheme(),
-                instanceName = client.getInstanceName(),
+                instanceName = client.getInstance().domain,
                 port = client.getPort(),
                 path = endpoint,
                 query = params

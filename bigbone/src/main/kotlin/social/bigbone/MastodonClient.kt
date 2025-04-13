@@ -93,19 +93,26 @@ import javax.net.ssl.X509TrustManager
  * towards the Mastodon instance specified. Request/response data is serialized/deserialized accordingly.
  */
 class MastodonClient private constructor(
-    private val instanceName: String,
-    internal val streamingUrl: String,
     private val instance: Instance,
     private val client: OkHttpClient,
     private val accessToken: String? = null,
     private val debug: Boolean = false,
-    private val instanceVersion: String? = null,
     private val scheme: String = "https",
     private val port: Int = 443
 ) {
 
-    //region API methods
+    internal val streamingUrl by lazy {
+        val instanceStreamingUrl = instance.configuration.urls.streaming
+            .takeIf { it.isNotBlank() }
+            // okhttp’s HttpUrl which is used later to parse this result only allows http(s)
+            // so we need to replace ws(s) first
+            ?.replace("ws:", "http:")
+            ?.replace("wss:", "https:")
 
+        instanceStreamingUrl ?: HttpUrl.Builder().scheme(scheme).host(getInstance().domain).toString()
+    }
+
+    //region API methods
     /**
      * Access API methods under the "accounts" endpoint.
      */
@@ -455,9 +462,19 @@ class MastodonClient private constructor(
         PUT
     }
 
-    fun getInstanceName() = instanceName
+    @Deprecated(
+        message = "This method is deprecated and will be removed in future versions.",
+        replaceWith = ReplaceWith("getInstance().domain"),
+        level = DeprecationLevel.ERROR
+    )
+    fun getInstanceName() = getInstance().domain
 
-    fun getInstanceVersion() = instanceVersion
+    @Deprecated(
+        message = "This method is deprecated and will be removed in future versions.",
+        replaceWith = ReplaceWith("getInstance().version"),
+        level = DeprecationLevel.ERROR
+    )
+    fun getInstanceVersion() = getInstance().version
 
     fun getInstance(): Instance = instance
 
@@ -574,7 +591,7 @@ class MastodonClient private constructor(
      */
     fun delete(path: String, body: Parameters?): Response {
         try {
-            val url = fullUrl(scheme, instanceName, port, path)
+            val url = fullUrl(scheme, getInstance().domain, port, path)
             debugPrintUrl(url)
             val call = client.newCall(
                 Request.Builder()
@@ -595,7 +612,7 @@ class MastodonClient private constructor(
      */
     fun get(path: String, query: Parameters? = null): Response {
         try {
-            val url = fullUrl(scheme, instanceName, port, path, query)
+            val url = fullUrl(scheme, getInstance().domain, port, path, query)
             debugPrintUrl(url)
             val call = client.newCall(
                 Request.Builder()
@@ -700,7 +717,7 @@ class MastodonClient private constructor(
      */
     fun patch(path: String, body: Parameters?): Response {
         try {
-            val url = fullUrl(scheme, instanceName, port, path)
+            val url = fullUrl(scheme, getInstance().domain, port, path)
             debugPrintUrl(url)
             val call = client.newCall(
                 Request.Builder()
@@ -740,7 +757,7 @@ class MastodonClient private constructor(
      */
     fun postRequestBody(path: String, body: RequestBody, idempotencyKey: String? = null): Response {
         try {
-            val url = fullUrl(scheme, instanceName, port, path)
+            val url = fullUrl(scheme, getInstance().domain, port, path)
             debugPrintUrl(url)
             val call = client.newCall(
                 Request.Builder().apply {
@@ -776,7 +793,7 @@ class MastodonClient private constructor(
      */
     fun putRequestBody(path: String, body: RequestBody): Response {
         try {
-            val url = fullUrl(scheme, instanceName, port, path)
+            val url = fullUrl(scheme, getInstance().domain, port, path)
             debugPrintUrl(url)
             val call = client.newCall(
                 Request.Builder()
@@ -953,21 +970,19 @@ class MastodonClient private constructor(
         }
 
         /**
-         * Get the version string for this Mastodon instance.
-         * @return a string corresponding to the version of this Mastodon instance
-         * @throws BigBoneClientInstantiationException if instance version cannot be retrieved
+         * Runs a [NodeInfoClient.retrieveServerInfo] request to ensure the server runs Mastodon.
+         *
+         * @throws BigBoneClientInstantiationException if server doesn't appear to run Mastodon
          */
         @Throws(BigBoneClientInstantiationException::class)
-        private fun getInstanceVersion(): String {
-            val serverVersion: String? = NodeInfoClient
+        private fun requireServerRunsMastodon() {
+            val serverRunsMastodon: Boolean = NodeInfoClient
                 .retrieveServerInfo(host = instanceName, scheme = scheme, port = port)
                 ?.software
-                ?.takeIf { it.name == "mastodon" }
-                ?.version
+                ?.name == "mastodon"
+            if (serverRunsMastodon) return
 
-            if (serverVersion == null) throw InstanceVersionRetrievalException(message = "Server $instanceName doesn't appear to run Mastodon")
-
-            return serverVersion
+            throw InstanceVersionRetrievalException(message = "Server $instanceName doesn't appear to run Mastodon")
         }
 
         private fun configureForTrustAll(clientBuilder: OkHttpClient.Builder) {
@@ -1043,10 +1058,12 @@ class MastodonClient private constructor(
          * Builds this MastodonClient.
          *
          * @throws BigBoneClientInstantiationException if the client could not be instantiated, likely due to an issue
-         * when getting the instance version of the server in [instanceName]. Other exceptions, e.g. due to no Internet
+         * when getting the [Instance] of the server. Other exceptions, e.g. due to no Internet
          * connection are _not_ caught by this library.
          */
         fun build(): MastodonClient {
+            requireServerRunsMastodon()
+
             val httpClient = okHttpClientBuilder
                 .addNetworkInterceptor(AuthorizationInterceptor(accessToken))
                 .readTimeout(readTimeoutSeconds, TimeUnit.SECONDS)
@@ -1054,25 +1071,15 @@ class MastodonClient private constructor(
                 .connectTimeout(connectTimeoutSeconds, TimeUnit.SECONDS)
                 .build()
 
-            // Get instance version first as this may fail if the server doesn't appear to run Mastodon
-            val instanceVersion = getInstanceVersion()
-
             val instance = getInstance(httpClient)
-            val streamingUrl = getStreamingApiUrl(
-                instance = instance,
-                fallbackUrl = HttpUrl.Builder().scheme(scheme).host(instanceName)::toString
-            )
 
             return MastodonClient(
-                instanceName = instanceName,
                 instance = instance,
                 client = httpClient,
                 accessToken = accessToken,
                 debug = debug,
-                instanceVersion = instanceVersion,
                 scheme = scheme,
-                port = port,
-                streamingUrl = streamingUrl
+                port = port
             )
         }
     }

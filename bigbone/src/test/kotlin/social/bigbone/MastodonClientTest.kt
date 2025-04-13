@@ -230,6 +230,8 @@ class MastodonClientTest {
                     "{\"error\": \"Instance info not found\"}".toResponseBody("application/json".toMediaType())
                 }
                 every { isSuccessful } answers { false }
+                every { code } answers { 418 }
+                every { message } answers { "I’m a teapot" }
                 every { close() } returns Unit
             }
             every { executeInstanceRequest(any()) } answers { responseMock }
