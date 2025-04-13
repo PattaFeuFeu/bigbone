@@ -113,6 +113,7 @@ class MastodonClient private constructor(
     }
 
     //region API methods
+
     /**
      * Access API methods under the "accounts" endpoint.
      */
