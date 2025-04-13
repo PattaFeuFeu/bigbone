@@ -101,7 +101,7 @@ class MastodonClient private constructor(
     private val port: Int = 443
 ) {
 
-    internal val streamingUrl by lazy {
+    internal val streamingUrl: HttpUrl by lazy {
         val instanceStreamingUrl = instance.configuration.urls.streaming
             .takeIf { it.isNotBlank() }
             // okhttp’s HttpUrl which is used later to parse this result only allows http(s)
@@ -109,7 +109,7 @@ class MastodonClient private constructor(
             ?.replace("ws:", "http:")
             ?.replace("wss:", "https:")
 
-        instanceStreamingUrl ?: HttpUrl.Builder().scheme(scheme).host(getInstance().domain).toString()
+        instanceStreamingUrl?.toHttpUrl() ?: HttpUrl.Builder().scheme(scheme).host(getInstance().domain).build()
     }
 
     //region API methods
@@ -643,7 +643,7 @@ class MastodonClient private constructor(
                 .header("Authorization", "Bearer $accessToken")
                 .url(
                     fullUrl(
-                        existingUrl = streamingUrl.toHttpUrl(),
+                        existingUrl = streamingUrl,
                         path = "api/v1/streaming",
                         queryParameters = parameters
                     )

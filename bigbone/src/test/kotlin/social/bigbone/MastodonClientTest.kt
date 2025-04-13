@@ -143,7 +143,8 @@ class MastodonClientTest {
     @Test
     fun `Given streaming URL in instance response, when building MastodonClient, then use that streaming URL`() {
         val serverUrl = "mastodon.example"
-        val expectedStreamingUrl = "wss://streaming.example.com"
+        val streamingUrl = "wss://streaming.example.com"
+
         val clientBuilder = spyk(MastodonClient.Builder(serverUrl)) {
             // Mock internal NodeInfoClient so that we don't open the site in unit testing
             mockkObject(NodeInfoClient)
@@ -161,7 +162,7 @@ class MastodonClientTest {
                   "description": "A Mastodon instance for testing",
                   "configuration": {
                     "urls": {
-                      "streaming": "$expectedStreamingUrl"
+                      "streaming": "$streamingUrl"
                     }
                   }
                 }
@@ -176,7 +177,12 @@ class MastodonClientTest {
         }
 
         val mastodonClient = clientBuilder.build()
-        mastodonClient.streamingUrl shouldBeEqualTo expectedStreamingUrl.replace("wss", "https")
+        with(mastodonClient.streamingUrl) {
+            scheme shouldBeEqualTo "https"
+            host shouldBeEqualTo "streaming.example.com"
+            encodedPath shouldBeEqualTo "/"
+            toString() shouldBeEqualTo "https://streaming.example.com/"
+        }
     }
 
     @Test
@@ -212,7 +218,12 @@ class MastodonClientTest {
         }
 
         val mastodonClient = clientBuilder.build()
-        mastodonClient.streamingUrl shouldBeEqualTo "https://$serverUrl/"
+        with(mastodonClient.streamingUrl) {
+            scheme shouldBeEqualTo "https"
+            host shouldBeEqualTo serverUrl
+            encodedPath shouldBeEqualTo "/"
+            toString() shouldBeEqualTo "https://$serverUrl/"
+        }
     }
 
     @Test
