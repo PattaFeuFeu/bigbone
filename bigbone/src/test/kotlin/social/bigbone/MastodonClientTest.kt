@@ -254,7 +254,7 @@ class MastodonClientTest {
 
         invoking(clientBuilder::build)
             .shouldThrow(InstanceRetrievalException::class)
-            .withMessage("Instance request failed with code $failureCode and message $failureMessage")
+            .withMessage("Instance request failed with code $failureCode and message \"$failureMessage\".")
     }
 
     @Test

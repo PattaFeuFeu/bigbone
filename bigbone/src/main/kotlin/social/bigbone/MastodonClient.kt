@@ -1046,7 +1046,7 @@ class MastodonClient private constructor(
                     }
                 } else {
                     throw InstanceRetrievalException(
-                        "Instance request failed with code ${response.code} and message ${response.message}"
+                        "Instance request failed with code ${response.code} and message \"${response.message}\"."
                     )
                 }
             }
