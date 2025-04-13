@@ -959,17 +959,6 @@ class MastodonClient private constructor(
             this.debug = true
         }
 
-        private fun getStreamingApiUrl(instance: Instance, fallbackUrl: () -> String): String {
-            val instanceStreamingUrl = instance.configuration.urls.streaming
-                .takeIf { it.isNotBlank() }
-                // okhttp’s HttpUrl which is used later to parse this result only allows http(s)
-                // so we need to replace ws(s) first
-                ?.replace("ws:", "http:")
-                ?.replace("wss:", "https:")
-
-            return instanceStreamingUrl ?: fallbackUrl()
-        }
-
         /**
          * Runs a [NodeInfoClient.retrieveServerInfo] request to ensure the server runs Mastodon.
          *
