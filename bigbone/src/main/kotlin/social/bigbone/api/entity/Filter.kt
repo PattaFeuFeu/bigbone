@@ -78,6 +78,7 @@ data class Filter(
 
         /**
          * Hide/blur media attachments with a warning identifying the matching filter by title.
+         * @since Mastodon 4.4.0
          */
         @SerialName("blur")
         BLUR
