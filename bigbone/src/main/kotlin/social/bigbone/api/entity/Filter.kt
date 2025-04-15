@@ -74,7 +74,14 @@ data class Filter(
          * This is the default (and unknown values should be treated as equivalent to warn).
          */
         @SerialName("warn")
-        WARN
+        WARN,
+
+        /**
+         * Hide/blur media attachments with a warning identifying the matching filter by title.
+         * @since Mastodon 4.4.0
+         */
+        @SerialName("blur")
+        BLUR
     }
 
     /**

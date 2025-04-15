@@ -47,7 +47,8 @@ class FilterMethods(private val client: MastodonClient) {
      * @param context where the filter should be applied. Specify at least one of home, notifications, public, thread, account.
      * @param filterKeywords list of [FilterKeyword] to be added to the newly-created filter group
      * @param expiresIn how many seconds from now should the filter expire?
-     * @param filterAction the policy to be applied when the filter is matched. Specify warn or hide.
+     * @param filterAction the policy to be applied when the filter is matched. Note that [Filter.FilterAction.BLUR]
+     *  can not be used when attempting to create a filter on a Mastodon instance running API version < 5.
      * @see <a href="https://docs.joinmastodon.org/methods/filters/#create">Mastodon API documentation: methods/filters/#create</a>
      */
     @JvmOverloads
@@ -59,6 +60,11 @@ class FilterMethods(private val client: MastodonClient) {
         expiresIn: Int? = null,
         filterAction: Filter.FilterAction = Filter.FilterAction.WARN
     ): MastodonRequest<Filter> {
+        // see: https://github.com/mastodon/mastodon/pull/34256
+        if (filterAction == Filter.FilterAction.BLUR && client.getInstance().apiVersions.mastodon < 5) {
+            throw BigBoneRequestException("FilterAction.BLUR not available on Mastodon instance with API version < 5")
+        }
+
         return client.getMastodonRequest(
             endpoint = endpoint,
             method = MastodonClient.Method.POST,
