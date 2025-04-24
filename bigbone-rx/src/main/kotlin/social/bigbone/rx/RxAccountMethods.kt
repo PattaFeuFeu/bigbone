@@ -15,6 +15,7 @@ import social.bigbone.api.entity.Token
 import social.bigbone.api.entity.data.Visibility
 import social.bigbone.api.method.AccountMethods
 import java.time.Duration
+import java.time.LocalDate
 
 /**
  * Reactive implementation of [AccountMethods].
@@ -34,6 +35,7 @@ class RxAccountMethods(client: MastodonClient) {
      * to the user in order to allow them to consent before setting this parameter to TRUE.
      * @param locale The language of the confirmation email that will be sent
      * @param reason If registrations require manual approval, this text will be reviewed by moderators.
+     * @param dateOfBirth If a minimum age is required, this date of birth must be provided and will be checked against.
      * @see <a href="https://docs.joinmastodon.org/methods/accounts/#create">Mastodon API documentation: methods/accounts/#create</a>
      */
     fun registerAccount(
@@ -42,9 +44,10 @@ class RxAccountMethods(client: MastodonClient) {
         password: String,
         agreement: Boolean,
         locale: String,
-        reason: String?
+        reason: String?,
+        dateOfBirth: LocalDate?
     ): Single<Token> = Single.fromCallable {
-        accountMethods.registerAccount(username, email, password, agreement, locale, reason).execute()
+        accountMethods.registerAccount(username, email, password, agreement, locale, reason, dateOfBirth).execute()
     }
 
     /**

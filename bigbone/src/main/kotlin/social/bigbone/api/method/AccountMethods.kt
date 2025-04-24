@@ -15,6 +15,7 @@ import social.bigbone.api.entity.Status
 import social.bigbone.api.entity.Token
 import social.bigbone.api.entity.data.Visibility
 import java.time.Duration
+import java.time.LocalDate
 
 /**
  * Allows access to API methods with endpoints having an "api/vX/accounts" prefix.
@@ -33,6 +34,7 @@ class AccountMethods(private val client: MastodonClient) {
      * to the user in order to allow them to consent before setting this parameter to TRUE.
      * @param locale The language of the confirmation email that will be sent
      * @param reason If registrations require manual approval, this text will be reviewed by moderators.
+     * @param dateOfBirth If a minimum age is required, this date of birth must be provided and will be checked against.
      * @see <a href="https://docs.joinmastodon.org/methods/accounts/#create">Mastodon API documentation: methods/accounts/#create</a>
      */
     fun registerAccount(
@@ -41,7 +43,8 @@ class AccountMethods(private val client: MastodonClient) {
         password: String,
         agreement: Boolean,
         locale: String,
-        reason: String?
+        reason: String?,
+        dateOfBirth: LocalDate?
     ): MastodonRequest<Token> {
         return client.getMastodonRequest(
             endpoint = endpoint,
@@ -53,6 +56,7 @@ class AccountMethods(private val client: MastodonClient) {
                 append("agreement", agreement)
                 append("locale", locale)
                 reason?.let { append("reason", it) }
+                dateOfBirth?.let { append("date_of_birth", it.toString()) }
             }
         )
     }
