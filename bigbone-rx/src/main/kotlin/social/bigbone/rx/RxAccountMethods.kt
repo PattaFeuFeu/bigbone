@@ -8,6 +8,7 @@ import social.bigbone.api.entity.Account
 import social.bigbone.api.entity.CredentialAccount
 import social.bigbone.api.entity.FamiliarFollowers
 import social.bigbone.api.entity.FeaturedTag
+import social.bigbone.api.entity.Instance
 import social.bigbone.api.entity.MastodonList
 import social.bigbone.api.entity.Relationship
 import social.bigbone.api.entity.Status
@@ -35,7 +36,7 @@ class RxAccountMethods(client: MastodonClient) {
      * to the user in order to allow them to consent before setting this parameter to TRUE.
      * @param locale The language of the confirmation email that will be sent
      * @param reason If registrations require manual approval, this text will be reviewed by moderators.
-     * @param dateOfBirth If a minimum age is required, this date of birth must be provided and will be checked against.
+     * @param dateOfBirth If a minimum age is required (see [Instance.Registrations.minAge]), this date of birth must be provided and will be checked against.
      * @see <a href="https://docs.joinmastodon.org/methods/accounts/#create">Mastodon API documentation: methods/accounts/#create</a>
      */
     fun registerAccount(
