@@ -81,6 +81,7 @@
   "registrations": {
     "enabled": false,
     "approval_required": false,
+    "min_age": 42,
     "message": null
   },
   "contact": {

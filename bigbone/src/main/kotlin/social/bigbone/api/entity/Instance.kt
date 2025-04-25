@@ -352,6 +352,13 @@ data class Instance(
         val approvalRequired: Boolean = false,
 
         /**
+         * The minimum user age in years, if set.
+         * @since Mastodon 4.4.0
+         */
+        @SerialName("min_age")
+        val minAge: Int? = null,
+
+        /**
          * A custom message to be shown when registrations are closed.
          * Nullable String (HTML) or null
          */

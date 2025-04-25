@@ -96,6 +96,7 @@ class InstanceMethodsTest {
         with(instance.registrations) {
             enabled shouldBeEqualTo false
             approvalRequired shouldBeEqualTo false
+            minAge shouldBeEqualTo 42
             message.shouldBeNull()
         }
 

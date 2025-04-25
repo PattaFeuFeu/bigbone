@@ -19,6 +19,7 @@ import social.bigbone.testtool.MockClient
 import social.bigbone.testtool.TestUtil.urlEncode
 import java.time.Duration
 import java.time.Instant
+import java.time.LocalDate
 
 class AccountMethodsTest {
 
@@ -33,7 +34,8 @@ class AccountMethodsTest {
             password = "password",
             agreement = true,
             locale = "DE",
-            reason = "Please let me in!"
+            reason = "Please let me in!",
+            dateOfBirth = LocalDate.of(1990, 1, 1)
         ).execute()
 
         with(token) {
@@ -42,6 +44,39 @@ class AccountMethodsTest {
             scope shouldBeEqualTo "read write follow push"
             createdAt shouldBeEqualTo 1_573_979_017L
         }
+        val parametersCapturingSlot = slot<Parameters>()
+        verify {
+            client.post(
+                path = accountMethods.endpoint,
+                body = capture(parametersCapturingSlot)
+            )
+        }
+        with(parametersCapturingSlot.captured) {
+            toQuery() shouldBeEqualTo "username=username" +
+                "&email=email" +
+                "&password=password" +
+                "&agreement=true" +
+                "&locale=DE" +
+                "&reason=Please+let+me+in%21" +
+                "&date_of_birth=1990-01-01"
+        }
+    }
+
+    @Test
+    fun `When registering account with no date of birth, then call endpoint without date_of_birth`() {
+        val client = MockClient.mock("accounts_register_success.json")
+        val accountMethods = AccountMethods(client)
+
+        val token = accountMethods.registerAccount(
+            username = "username",
+            email = "email",
+            password = "password",
+            agreement = true,
+            locale = "DE",
+            reason = "Please let me in!",
+            dateOfBirth = null
+        ).execute()
+
         val parametersCapturingSlot = slot<Parameters>()
         verify {
             client.post(
@@ -75,7 +110,8 @@ class AccountMethodsTest {
                 password = "",
                 agreement = false,
                 locale = "DE",
-                reason = "Please let me in!"
+                reason = "Please let me in!",
+                dateOfBirth = LocalDate.of(1990, 1, 1)
             ).execute()
         }
             .shouldThrow(BigBoneRequestException::class)
