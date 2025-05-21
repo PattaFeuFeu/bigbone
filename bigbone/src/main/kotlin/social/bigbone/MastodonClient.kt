@@ -89,7 +89,7 @@ import javax.net.ssl.SSLSession
 import javax.net.ssl.X509TrustManager
 
 /**
- * This class is used by method classes (e.g. AccountMethods, RxAcccountMethods, ...) and performs HTTP calls
+ * This class is used by method classes (e.g. AccountMethods, RxAccountMethods, ...) and performs HTTP calls
  * towards the Mastodon instance specified. Request/response data is serialized/deserialized accordingly.
  */
 class MastodonClient private constructor(
@@ -98,7 +98,8 @@ class MastodonClient private constructor(
     private val accessToken: String? = null,
     private val debug: Boolean = false,
     private val scheme: String = "https",
-    private val port: Int = 443
+    private val port: Int = 443,
+    internal val performCompatibilityChecks: Boolean = true
 ) {
 
     internal val streamingUrl: HttpUrl by lazy {
@@ -893,6 +894,7 @@ class MastodonClient private constructor(
         private var scheme = "https"
         private var port = 443
         private var trustAllCerts = false
+        private var performCompatibilityChecks = true
         private var readTimeoutSeconds = 10L
         private var writeTimeoutSeconds = 10L
         private var connectTimeoutSeconds = 10L
@@ -961,6 +963,18 @@ class MastodonClient private constructor(
          */
         fun setConnectTimeoutSeconds(timeoutSeconds: Long) = apply {
             connectTimeoutSeconds = timeoutSeconds
+        }
+
+        /**
+         * Disable checks of the server software and version.
+         * Checks disabled by this include the initial check for the server software reporting as Mastodon while
+         * building the client, as well as subsequent checks for the exact API version in use. This allows the
+         * resulting MastodonClient to be used with other server software offering a Mastodon-compatible API,
+         * at the cost of having to check for invalid requests yourself. Endpoints and individual attributes
+         * not defined in the official Mastodon API are not supported.
+         */
+        fun disableCompatibilityChecks() = apply {
+            this.performCompatibilityChecks = false
         }
 
         fun debug() = apply {
@@ -1060,7 +1074,9 @@ class MastodonClient private constructor(
          * connection are _not_ caught by this library.
          */
         fun build(): MastodonClient {
-            requireServerRunsMastodon()
+            if (performCompatibilityChecks) {
+                requireServerRunsMastodon()
+            }
 
             val httpClient = okHttpClientBuilder
                 .addNetworkInterceptor(AuthorizationInterceptor(accessToken))
@@ -1077,7 +1093,8 @@ class MastodonClient private constructor(
                 accessToken = accessToken,
                 debug = debug,
                 scheme = scheme,
-                port = port
+                port = port,
+                performCompatibilityChecks = performCompatibilityChecks,
             )
         }
     }
