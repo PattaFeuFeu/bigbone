@@ -39,7 +39,8 @@ class SearchMethods(private val client: MastodonClient) {
      * @see <a href="https://github.com/mastodon/documentation/issues/1336">Mastodon issue: incomplete documentation of offset/type parameters</a>
      * @param query string to search for
      * @param type to specify if you are looking for a specific typology
-     * @param resolve whether to resolve non-local accounts
+     * @param resolve whether to resolve non-local accounts; also, if the search term is an HTTPS URL,
+     *  whether to resolve and if possible return the corresponding status
      * @param following whether to include accounts that the user is following
      * @param excludeUnreviewed whether to look for trending tags
      * @param accountId to only return statuses authored by the user account
