@@ -61,7 +61,7 @@ class FilterMethods(private val client: MastodonClient) {
         filterAction: Filter.FilterAction = Filter.FilterAction.WARN
     ): MastodonRequest<Filter> {
         // see: https://github.com/mastodon/mastodon/pull/34256
-        if (filterAction == Filter.FilterAction.BLUR && client.getInstance().apiVersions.mastodon < 5) {
+        if (client.performCompatibilityChecks && filterAction == Filter.FilterAction.BLUR && client.getInstance().apiVersions.mastodon < 5) {
             throw BigBoneRequestException("FilterAction.BLUR not available on Mastodon instance with API version < 5")
         }
 
