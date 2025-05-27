@@ -828,6 +828,11 @@ class MastodonClient private constructor(
 
     companion object {
         /**
+         * The minimum Mastodon server version supported by the BigBone library.
+         */
+        private val minimumSupportedVersion = SemanticVersion("4.2.0")
+
+        /**
          * Returns a HttpUrl.
          * @param scheme the schema to be used, either "http" or "https"
          * @param instanceName the Mastodon instance hostname
@@ -967,11 +972,11 @@ class MastodonClient private constructor(
 
         /**
          * Disable checks of the server software and version.
-         * Checks disabled by this include the initial check for the server software reporting as Mastodon while
-         * building the client, as well as subsequent checks for the exact API version in use. This allows the
-         * resulting MastodonClient to be used with other server software offering a Mastodon-compatible API,
-         * at the cost of having to check for invalid requests yourself. Endpoints and individual attributes
-         * not defined in the official Mastodon API are not supported.
+         * Checks disabled by this include the initial check for the server software reporting as Mastodon and
+         * its version compared to a minimum supported version while building the client, as well as subsequent
+         * checks for the exact API version in use. This allows the resulting MastodonClient to be used with other
+         * server software offering a Mastodon-compatible API, at the cost of having to check for invalid requests
+         * yourself. Endpoints and individual attributes not defined in the official Mastodon API are not supported.
          */
         fun disableCompatibilityChecks() = apply {
             this.performCompatibilityChecks = false
@@ -987,14 +992,22 @@ class MastodonClient private constructor(
          * @throws BigBoneClientInstantiationException if server doesn't appear to run Mastodon
          */
         @Throws(BigBoneClientInstantiationException::class)
-        private fun requireServerRunsMastodon() {
-            val serverRunsMastodon: Boolean = NodeInfoClient
-                .retrieveServerInfo(host = instanceName, scheme = scheme, port = port)
-                ?.software
-                ?.name == "mastodon"
-            if (serverRunsMastodon) return
+        private fun requireServerRunsMastodonAtMinimumVersion() {
+            val server = NodeInfoClient.retrieveServerInfo(host = instanceName, scheme = scheme, port = port)
+            val serverRunsMastodon: Boolean = server?.software?.name == "mastodon"
 
-            throw UnsupportedServerException(message = "Server $instanceName doesn't appear to run Mastodon")
+            val versionString = server?.software?.version ?: ""
+            val serverRunsMinimumVersion: Boolean = SemanticVersion(versionString).isAtLeast(minimumSupportedVersion)
+
+            if (!serverRunsMastodon) {
+                throw UnsupportedServerException(message = "Server $instanceName doesn't appear to run Mastodon")
+            }
+
+            if (!serverRunsMinimumVersion) {
+                throw UnsupportedServerException(
+                    message = "Server $instanceName runs Mastodon at unsupported version ${server.software.version} < $minimumSupportedVersion"
+                )
+            }
         }
 
         private fun configureForTrustAll(clientBuilder: OkHttpClient.Builder) {
@@ -1075,7 +1088,7 @@ class MastodonClient private constructor(
          */
         fun build(): MastodonClient {
             if (performCompatibilityChecks) {
-                requireServerRunsMastodon()
+                requireServerRunsMastodonAtMinimumVersion()
             }
 
             val httpClient = okHttpClientBuilder
