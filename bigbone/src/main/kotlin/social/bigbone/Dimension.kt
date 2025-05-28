@@ -9,4 +9,6 @@ import kotlinx.serialization.Serializable
 data class Dimension(
     val width: Int,
     val height: Int
-)
+) {
+    override fun toString(): String = "${width}x$height"
+}
