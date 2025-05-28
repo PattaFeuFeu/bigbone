@@ -7,7 +7,7 @@ import social.bigbone.PrecisionDateTime
 
 /**
  * Represents the software instance of Mastodon running on this domain.
- * @see <a href="https://docs.joinmastodon.org/entities/V1_Instance/">Mastodon API V1::Instance</a>
+ * @see <a href="https://docs.joinmastodon.org/entities/Instance/">Mastodon API Instance</a>
  */
 @Serializable
 data class Instance(
@@ -89,6 +89,7 @@ data class Instance(
 ) {
     /**
      * Usage data for this instance.
+     * @see <a href="https://docs.joinmastodon.org/entities/Instance/#usage">Mastodon API Instance/#usage</a>
      */
     @Serializable
     data class Usage(
@@ -113,6 +114,7 @@ data class Instance(
 
     /**
      * An image used to represent this instance.
+     * @see <a href="https://docs.joinmastodon.org/entities/Instance/#thumbnail">Mastodon API Instance/#thumbnail</a>
      */
     @Serializable
     data class Thumbnail(
@@ -131,6 +133,7 @@ data class Instance(
 
         /**
          * Links to scaled resolution images, for high DPI screens.
+         * @see <a href="https://docs.joinmastodon.org/entities/Instance/#thumbnail-versions">Mastodon API Instance/#thumbnail-versions</a>
          */
         @SerialName("versions")
         val versions: Versions? = null
@@ -211,7 +214,7 @@ data class Instance(
 
         /**
          * Limits related to accounts.
-         * @see <a href="https://docs.joinmastodon.org/entities/V1_Instance/">Mastodon API V1::Instance</a>
+         * @see <a href="https://docs.joinmastodon.org/entities/Instance/#accounts">Mastodon API Instance/#accounts</a>
          */
         @Serializable
         data class Accounts(
@@ -224,7 +227,7 @@ data class Instance(
 
         /**
          * Limits related to authoring statuses.
-         * @see <a href="https://docs.joinmastodon.org/entities/V1_Instance/">Mastodon API V1::Instance</a>
+         * @see <a href="https://docs.joinmastodon.org/entities/Instance/#statuses">Mastodon API Instance/#statuses</a>
          */
         @Serializable
         data class Statuses(
@@ -249,7 +252,7 @@ data class Instance(
 
         /**
          * Hints for which attachments will be accepted.
-         * @see <a href="https://docs.joinmastodon.org/entities/V1_Instance/">Mastodon API V1::Instance</a>
+         * @see <a href="https://docs.joinmastodon.org/entities/Instance/#media_attachments">Mastodon API Instance/#media_attachments</a>
          */
         @Serializable
         data class MediaAttachments(
@@ -292,7 +295,7 @@ data class Instance(
 
         /**
          * Limits related to polls.
-         * @see <a href="https://docs.joinmastodon.org/entities/V1_Instance/">Mastodon API V1::Instance</a>
+         * @see <a href="https://docs.joinmastodon.org/entities/Instance/#polls">Mastodon API Instance/#polls</a>
          */
         @Serializable
         data class Polls(
@@ -323,6 +326,7 @@ data class Instance(
 
         /**
          * Hints related to translation.
+         * @see <a href="https://docs.joinmastodon.org/entities/Instance/#translation">Mastodon API Instance/#translation</a>
          */
         @Serializable
         data class Translation(
@@ -336,6 +340,7 @@ data class Instance(
 
     /**
      * Information about registering for this website.
+     * @see <a href="https://docs.joinmastodon.org/entities/Instance/#registrations">Mastodon API Instance/#registrations</a>
      */
     @Serializable
     data class Registrations(
@@ -368,6 +373,7 @@ data class Instance(
 
     /**
      * Information about which version of the API is implemented by this server.
+     * @see <a href="https://docs.joinmastodon.org/entities/Instance/#api-versions">Mastodon API Instance/#api-versions</a>
      */
     @Serializable
     data class ApiVersions(
@@ -381,6 +387,7 @@ data class Instance(
 
     /**
      * Hints related to contacting a representative of the website.
+     * @see <a href="https://docs.joinmastodon.org/entities/Instance/#contact">Mastodon API Instance/#contact</a>
      */
     @Serializable
     data class Contact(
