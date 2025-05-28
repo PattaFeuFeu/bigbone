@@ -3,6 +3,7 @@ package social.bigbone.api.entity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import social.bigbone.DateTimeSerializer
+import social.bigbone.Dimension
 import social.bigbone.PrecisionDateTime
 
 /**
@@ -49,6 +50,13 @@ data class Instance(
      */
     @SerialName("thumbnail")
     val thumbnail: Thumbnail = Thumbnail(),
+
+    /**
+     * The list of available size variants for this instance configured icon.
+     * @since Mastodon 4.3.0
+     */
+    @SerialName("icon")
+    val icon: List<InstanceIcon> = emptyList(),
 
     /**
      * Primary languages of the website and its staff.
@@ -158,6 +166,28 @@ data class Instance(
     }
 
     /**
+     * An available size variant for this instance configured icon.
+     * @since Mastodon 4.3.0
+     * @see <a href="https://docs.joinmastodon.org/entities/Instance/#InstanceIcon">Mastodon API Instance/#InstanceIcon</a>
+     */
+    @Serializable
+    data class InstanceIcon(
+        /**
+         * The URL of this icon.
+         * @since Mastodon 4.3.0
+         */
+        @SerialName("src")
+        val src: String,
+
+        /**
+         * The size of this icon.
+         * @since Mastodon 4.3.0
+         */
+        @SerialName("size")
+        val size: Dimension
+    )
+
+    /**
      * Configured values and limits for this website.
      * @see <a href="https://docs.joinmastodon.org/entities/Instance/#configuration">Mastodon API Instance/#configuration</a>
      */
@@ -205,6 +235,13 @@ data class Instance(
          */
         @SerialName("limited_federation")
         val limitedFederation: Boolean = false,
+
+        /**
+         * The instances VAPID data, used for push notifications.
+         * @since Mastodon 4.3.0
+         */
+        @SerialName("vapid")
+        val vapid: Vapid = Vapid(),
     ) {
         /**
          * URLs of interest for clients apps.
@@ -250,7 +287,14 @@ data class Instance(
              * The maximum number of featured tags allowed for each account.
              */
             @SerialName("max_featured_tags")
-            val maxFeaturedTags: Int = 0
+            val maxFeaturedTags: Int = 0,
+
+            /**
+             * The maximum number of pinned statuses for each account.
+             * @since Mastodon 4.3.0
+             */
+            @SerialName("max_pinned_statuses")
+            val maxPinnedStatuses: Int = 0,
         )
 
         /**
@@ -370,6 +414,20 @@ data class Instance(
              */
             @SerialName("enabled")
             val enabled: Boolean = false
+        )
+
+        /**
+         * The instances VAPID data, used for push notifications.
+         */
+        @Serializable
+        data class Vapid(
+            /**
+             * The instances VAPID public key, used for push notifications.
+             * The same as [WebPushSubscription.serverKey].
+             * @since Mastodon 4.3.0
+             */
+            @SerialName("public_key")
+            val publicKey: String = ""
         )
     }
 
