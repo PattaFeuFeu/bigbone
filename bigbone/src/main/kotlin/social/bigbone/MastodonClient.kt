@@ -89,7 +89,7 @@ import javax.net.ssl.SSLSession
 import javax.net.ssl.X509TrustManager
 
 /**
- * This class is used by method classes (e.g. AccountMethods, RxAcccountMethods, ...) and performs HTTP calls
+ * This class is used by method classes (e.g. AccountMethods, RxAccountMethods, ...) and performs HTTP calls
  * towards the Mastodon instance specified. Request/response data is serialized/deserialized accordingly.
  */
 class MastodonClient private constructor(
@@ -98,7 +98,8 @@ class MastodonClient private constructor(
     private val accessToken: String? = null,
     private val debug: Boolean = false,
     private val scheme: String = "https",
-    private val port: Int = 443
+    private val port: Int = 443,
+    internal val performCompatibilityChecks: Boolean = true
 ) {
 
     internal val streamingUrl: HttpUrl by lazy {
@@ -827,6 +828,11 @@ class MastodonClient private constructor(
 
     companion object {
         /**
+         * The minimum Mastodon server version supported by the BigBone library.
+         */
+        private val minimumSupportedVersion = SemanticVersion("4.2.0")
+
+        /**
          * Returns a HttpUrl.
          * @param scheme the schema to be used, either "http" or "https"
          * @param instanceName the Mastodon instance hostname
@@ -893,6 +899,7 @@ class MastodonClient private constructor(
         private var scheme = "https"
         private var port = 443
         private var trustAllCerts = false
+        private var performCompatibilityChecks = true
         private var readTimeoutSeconds = 10L
         private var writeTimeoutSeconds = 10L
         private var connectTimeoutSeconds = 10L
@@ -963,6 +970,18 @@ class MastodonClient private constructor(
             connectTimeoutSeconds = timeoutSeconds
         }
 
+        /**
+         * Disable checks of the server software and version.
+         * Checks disabled by this include the initial check for the server software reporting as Mastodon and
+         * its version compared to a minimum supported version while building the client, as well as subsequent
+         * checks for the exact API version in use. This allows the resulting MastodonClient to be used with other
+         * server software offering a Mastodon-compatible API, at the cost of having to check for invalid requests
+         * yourself. Endpoints and individual attributes not defined in the official Mastodon API are not supported.
+         */
+        fun disableCompatibilityChecks() = apply {
+            this.performCompatibilityChecks = false
+        }
+
         fun debug() = apply {
             this.debug = true
         }
@@ -973,14 +992,22 @@ class MastodonClient private constructor(
          * @throws BigBoneClientInstantiationException if server doesn't appear to run Mastodon
          */
         @Throws(BigBoneClientInstantiationException::class)
-        private fun requireServerRunsMastodon() {
-            val serverRunsMastodon: Boolean = NodeInfoClient
-                .retrieveServerInfo(host = instanceName, scheme = scheme, port = port)
-                ?.software
-                ?.name == "mastodon"
-            if (serverRunsMastodon) return
+        private fun requireServerRunsMastodonAtMinimumVersion() {
+            val server = NodeInfoClient.retrieveServerInfo(host = instanceName, scheme = scheme, port = port)
+            val serverRunsMastodon: Boolean = server?.software?.name == "mastodon"
 
-            throw UnsupportedServerException(message = "Server $instanceName doesn't appear to run Mastodon")
+            val versionString = server?.software?.version ?: ""
+            val serverRunsMinimumVersion: Boolean = SemanticVersion(versionString) >= minimumSupportedVersion
+
+            if (!serverRunsMastodon) {
+                throw UnsupportedServerException(message = "Server $instanceName doesn't appear to run Mastodon")
+            }
+
+            if (!serverRunsMinimumVersion) {
+                throw UnsupportedServerException(
+                    message = "Server $instanceName runs Mastodon at unsupported version $versionString < $minimumSupportedVersion"
+                )
+            }
         }
 
         private fun configureForTrustAll(clientBuilder: OkHttpClient.Builder) {
@@ -1060,7 +1087,9 @@ class MastodonClient private constructor(
          * connection are _not_ caught by this library.
          */
         fun build(): MastodonClient {
-            requireServerRunsMastodon()
+            if (performCompatibilityChecks) {
+                requireServerRunsMastodonAtMinimumVersion()
+            }
 
             val httpClient = okHttpClientBuilder
                 .addNetworkInterceptor(AuthorizationInterceptor(accessToken))
@@ -1077,7 +1106,8 @@ class MastodonClient private constructor(
                 accessToken = accessToken,
                 debug = debug,
                 scheme = scheme,
-                port = port
+                port = port,
+                performCompatibilityChecks = performCompatibilityChecks,
             )
         }
     }

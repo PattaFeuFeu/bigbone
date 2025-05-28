@@ -134,6 +134,30 @@ class MastodonClientTest {
     }
 
     @Test
+    fun `Given a Mastodon server running a version too small, when building MastodonClient with defaults, then fail with UnsupportedServerException`() {
+        val serverUrl = "mastodon.example"
+        val clientBuilder = spyk(MastodonClient.Builder(serverUrl)) {
+            // Mock internal NodeInfoClient so that we don't open the site in unit testing
+            mockkObject(NodeInfoClient)
+            every { NodeInfoClient.retrieveServerInfo(host = serverUrl) } returns Server(
+                schemaVersion = "2.0",
+                software = Server.Software(name = "mastodon", version = "4.0.0")
+            )
+
+            val responseMock = mockk<Response> {
+                every { code } answers { 404 }
+                every { message } answers { "Not Found" }
+                every { isSuccessful } answers { false }
+                every { close() } returns Unit
+            }
+            every { executeInstanceRequest(any()) } answers { responseMock }
+        }
+        invoking(clientBuilder::build)
+            .shouldThrow(UnsupportedServerException::class)
+            .withMessage("Server $serverUrl runs Mastodon at unsupported version 4.0.0 < 4.2.0")
+    }
+
+    @Test
     fun `Given a server that cannot be reached, when building MastodonClient, then propagate UnknownHostException`() {
         val clientBuilder: MastodonClient.Builder = spyk(MastodonClient.Builder("unreachabledomain"))
 
@@ -150,7 +174,7 @@ class MastodonClientTest {
             mockkObject(NodeInfoClient)
             every { NodeInfoClient.retrieveServerInfo(host = serverUrl) } returns Server(
                 schemaVersion = "2.0",
-                software = Server.Software(name = "mastodon", version = "4.0.0")
+                software = Server.Software(name = "mastodon", version = "4.3.5")
             )
 
             val jsonResponse = """
@@ -193,7 +217,7 @@ class MastodonClientTest {
             mockkObject(NodeInfoClient)
             every { NodeInfoClient.retrieveServerInfo(host = serverUrl) } returns Server(
                 schemaVersion = "2.0",
-                software = Server.Software(name = "mastodon", version = "4.0.0")
+                software = Server.Software(name = "mastodon", version = "4.3.5")
             )
 
             val jsonResponse = """

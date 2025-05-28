@@ -106,6 +106,7 @@ object MockClient {
         every { clientMock.put(any<String>(), any<Parameters>()) } returns response
         every { clientMock.putRequestBody(any<String>(), any<RequestBody>()) } returns response
         every { clientMock.performAction(any<String>(), any<MastodonClient.Method>(), any<Parameters>()) } returns Unit
+        every { clientMock.performCompatibilityChecks } returns true
         return clientMock
     }
 
@@ -137,6 +138,7 @@ object MockClient {
                 any<Parameters>()
             )
         } throws BigBoneRequestException("mock")
+        every { clientMock.performCompatibilityChecks } returns true
         return clientMock
     }
 
