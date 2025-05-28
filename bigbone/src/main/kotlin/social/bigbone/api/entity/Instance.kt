@@ -197,7 +197,14 @@ data class Instance(
          * Hints related to translation.
          */
         @SerialName("translation")
-        val translation: Translation = Translation()
+        val translation: Translation = Translation(),
+
+        /**
+         * Whether federation is limited to explicitly allowed domains.
+         * @since Mastodon 4.4.0
+         */
+        @SerialName("limited_federation")
+        val limitedFederation: Boolean = false,
     ) {
         /**
          * URLs of interest for clients apps.
@@ -209,7 +216,28 @@ data class Instance(
              * The Websockets URL for connecting to the streaming API.
              */
             @SerialName("streaming")
-            val streaming: String = ""
+            val streaming: String = "",
+
+            /**
+             * The URL of the server’s about page.
+             * @since Mastodon 4.4.0
+             */
+            @SerialName("about")
+            val about: String = "",
+
+            /**
+             * The URL of the server’s privacy policy.
+             * @since Mastodon 4.4.0
+             */
+            @SerialName("privacy_policy")
+            val privacyPolicy: String? = null,
+
+            /**
+             * The URL of the server’s current terms of service, if any.
+             * @since Mastodon 4.4.0
+             */
+            @SerialName("terms_of_service")
+            val termsOfService: String? = null,
         )
 
         /**
@@ -261,6 +289,13 @@ data class Instance(
              */
             @SerialName("supported_mime_types")
             val supportedMimeTypes: List<String> = emptyList(),
+
+            /**
+             * The maximum size of a description, in characters.
+             * @since Mastodon 4.4.0
+             */
+            @SerialName("description_limit")
+            val descriptionLimit: Int = 0,
 
             /**
              * The maximum size of any uploaded image, in bytes.
@@ -357,6 +392,14 @@ data class Instance(
         val approvalRequired: Boolean = false,
 
         /**
+         * Whether registrations require the user to provide a reason for joining.
+         * Only applicable when [approvalRequired] is true.
+         * @since Mastodon 4.4.0
+         */
+        @SerialName("reason_required")
+        val reasonRequired: Boolean? = false,
+
+        /**
          * The minimum user age in years, if set.
          * @since Mastodon 4.4.0
          */
@@ -368,7 +411,7 @@ data class Instance(
          * Nullable String (HTML) or null
          */
         @SerialName("message")
-        val message: String? = null
+        val message: String? = null,
     )
 
     /**
