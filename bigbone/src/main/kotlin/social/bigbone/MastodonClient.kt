@@ -997,7 +997,7 @@ class MastodonClient private constructor(
             val serverRunsMastodon: Boolean = server?.software?.name == "mastodon"
 
             val versionString = server?.software?.version ?: ""
-            val serverRunsMinimumVersion: Boolean = SemanticVersion(versionString).isAtLeast(minimumSupportedVersion)
+            val serverRunsMinimumVersion: Boolean = SemanticVersion(versionString) >= minimumSupportedVersion
 
             if (!serverRunsMastodon) {
                 throw UnsupportedServerException(message = "Server $instanceName doesn't appear to run Mastodon")
@@ -1005,7 +1005,7 @@ class MastodonClient private constructor(
 
             if (!serverRunsMinimumVersion) {
                 throw UnsupportedServerException(
-                    message = "Server $instanceName runs Mastodon at unsupported version ${server.software.version} < $minimumSupportedVersion"
+                    message = "Server $instanceName runs Mastodon at unsupported version $versionString < $minimumSupportedVersion"
                 )
             }
         }
