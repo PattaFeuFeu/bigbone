@@ -1,7 +1,7 @@
 {
   "domain": "mastodon.social",
   "title": "Mastodon",
-  "version": "4.0.0rc1",
+  "version": "4.4.0-alpha.3",
   "source_url": "https://github.com/mastodon/mastodon",
   "description": "The original server operated by the Mastodon gGmbH non-profit",
   "usage": {
@@ -17,15 +17,40 @@
       "@2x": "https://files.mastodon.social/site_uploads/files/000/000/001/@2x/57c12f441d083cde.png"
     }
   },
+  "icon": [
+    {
+      "src": "https://files.mastodon.social/site_uploads/files/000/000/003/36/accf17b0104f18e5.png",
+      "size": "36x36"
+    },
+    {
+      "src": "https://files.mastodon.social/site_uploads/files/000/000/003/72/accf17b0104f18e5.png",
+      "size": "72x72"
+    },
+    {
+      "src": "https://files.mastodon.social/site_uploads/files/000/000/003/192/accf17b0104f18e5.png",
+      "size": "192x192"
+    },
+    {
+      "src": "https://files.mastodon.social/site_uploads/files/000/000/003/512/accf17b0104f18e5.png",
+      "size": "512x512"
+    }
+  ],
   "languages": [
     "en"
   ],
   "configuration": {
     "urls": {
-      "streaming": "wss://mastodon.social"
+      "streaming": "wss://mastodon.social",
+      "about": "https://mastodon.social/about",
+      "privacy_policy": "https://mastodon.social/privacy-policy",
+      "terms_of_service": "https://mastodon.social/terms-of-service"
+    },
+    "vapid": {
+      "public_key": "BCkMmVdKDnKYwzVCDC99Iuc9GvId-x7-kKtuHnLgfF98ENiZp_aj-UNthbCdI70DqN1zUVis-x0Wrot2sBagkMc="
     },
     "accounts": {
-      "max_featured_tags": 10
+      "max_featured_tags": 10,
+      "max_pinned_statuses": 4
     },
     "statuses": {
       "max_characters": 500,
@@ -62,6 +87,7 @@
         "audio/3gpp",
         "video/x-ms-asf"
       ],
+      "description_limit": 1500,
       "image_size_limit": 10485760,
       "image_matrix_limit": 16777216,
       "video_size_limit": 41943040,
@@ -81,8 +107,12 @@
   "registrations": {
     "enabled": false,
     "approval_required": false,
-    "min_age": 42,
-    "message": null
+    "reason_required": false,
+    "message": null,
+    "min_age": 16
+  },
+  "api_versions": {
+    "mastodon": 1
   },
   "contact": {
     "email": "staff@mastodon.social",
