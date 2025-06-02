@@ -5,11 +5,13 @@ import org.amshove.kluent.invoking
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldHaveSize
+import org.amshove.kluent.shouldNotBe
 import org.amshove.kluent.shouldNotBeEmpty
 import org.amshove.kluent.shouldNotBeNull
 import org.amshove.kluent.shouldThrow
 import org.amshove.kluent.withMessage
 import org.junit.jupiter.api.Test
+import social.bigbone.Dimension
 import social.bigbone.PrecisionDateTime.ValidPrecisionDateTime.ExactTime
 import social.bigbone.api.entity.DomainBlock
 import social.bigbone.api.entity.ExtendedDescription
@@ -49,7 +51,7 @@ class InstanceMethodsTest {
         val instance = instanceMethods.getInstance().execute()
         instance.domain shouldBeEqualTo "mastodon.social"
         instance.title shouldBeEqualTo "Mastodon"
-        instance.version shouldBeEqualTo "4.0.0rc1"
+        instance.version shouldBeEqualTo "4.4.0-alpha.3"
         instance.sourceUrl shouldBeEqualTo "https://github.com/mastodon/mastodon"
         instance.description shouldBeEqualTo "The original server operated by the Mastodon gGmbH non-profit"
         instance.usage.users.activeMonth shouldBeEqualTo 123_122
@@ -64,14 +66,32 @@ class InstanceMethodsTest {
             }
         }
 
+        with(instance.icon) {
+            size shouldBeEqualTo 4
+            get(0).src shouldBeEqualTo "https://files.mastodon.social/site_uploads/files/000/000/003/36/accf17b0104f18e5.png"
+            get(0).size shouldBeEqualTo Dimension(width = 36, height = 36)
+            get(1).size shouldBeEqualTo Dimension(width = 72, height = 72)
+            get(2).size shouldBeEqualTo Dimension(width = 192, height = 192)
+            get(3).size shouldBeEqualTo Dimension(width = 512, height = 512)
+        }
+
         with(instance.languages) {
             size shouldBeEqualTo 1
             get(0) shouldBeEqualTo "en"
         }
 
         val config = instance.configuration
-        config.urls.streaming shouldBeEqualTo "wss://mastodon.social"
-        config.accounts.maxFeaturedTags shouldBeEqualTo 10
+        with(config.urls) {
+            streaming shouldBeEqualTo "wss://mastodon.social"
+            about shouldBeEqualTo "https://mastodon.social/about"
+            privacyPolicy shouldBeEqualTo "https://mastodon.social/privacy-policy"
+            termsOfService shouldBeEqualTo "https://mastodon.social/terms-of-service"
+        }
+        config.vapid.publicKey shouldNotBe null
+        with(config.accounts) {
+            maxFeaturedTags shouldBeEqualTo 10
+            maxPinnedStatuses shouldBeEqualTo 4
+        }
         with(config.statuses) {
             maxCharacters shouldBeEqualTo 500
             maxMediaAttachments shouldBeEqualTo 4
@@ -79,6 +99,7 @@ class InstanceMethodsTest {
         }
         with(config.mediaAttachments) {
             supportedMimeTypes shouldHaveSize 27
+            descriptionLimit shouldBeEqualTo 1500
             imageSizeLimit shouldBeEqualTo 10_485_760
             imageMatrixLimit shouldBeEqualTo 16_777_216
             videoSizeLimit shouldBeEqualTo 41_943_040
@@ -96,9 +117,11 @@ class InstanceMethodsTest {
         with(instance.registrations) {
             enabled shouldBeEqualTo false
             approvalRequired shouldBeEqualTo false
-            minAge shouldBeEqualTo 42
+            reasonRequired shouldBeEqualTo false
+            minAge shouldBeEqualTo 16
             message.shouldBeNull()
         }
+        instance.apiVersions.mastodon shouldBeEqualTo 1
 
         with(instance.contact) {
             email shouldBeEqualTo "staff@mastodon.social"

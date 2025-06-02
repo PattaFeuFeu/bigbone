@@ -23,12 +23,51 @@ internal val JSON_SERIALIZER: Json = Json {
 }
 
 /**
+ * Custom [KSerializer] to serialize and deserialize a string in the format "widthxheight"
+ * into a [Dimension] object and vice versa.
+ */
+object DimensionSerializer : KSerializer<Dimension> {
+
+    override val descriptor: SerialDescriptor =
+        PrimitiveSerialDescriptor("social.bigbone.DimensionSerializer", PrimitiveKind.STRING)
+
+    override fun serialize(encoder: Encoder, value: Dimension) {
+        encoder.encodeString(value.toString())
+    }
+
+    override fun deserialize(decoder: Decoder): Dimension {
+        val dimensionString = decoder.decodeString()
+
+        val parts = dimensionString.split('x')
+        require(parts.size == 2) {
+            "Invalid dimension format: $dimensionString. Expected format: widthxheight"
+        }
+
+        try {
+            val width = parts[0].toInt()
+            val height = parts[1].toInt()
+
+            require(width > 0) { "Width must be greater than 0, but was $width" }
+            require(height > 0) { "Height must be greater than 0, but was $height" }
+
+            return Dimension(width, height)
+        } catch (e: NumberFormatException) {
+            throw IllegalArgumentException(
+                "Invalid dimension values in: $dimensionString. Width and height must be integers.",
+                e
+            )
+        }
+    }
+}
+
+/**
  * Custom [KSerializer] to serialize and deserialize ISO 8601 datetime
  * or date strings into a [PrecisionDateTime] and vice versa.
  *
  * This will attempt to retrieve a [ValidPrecisionDateTime.ExactTime] first.
  * If that fails, it will try with [ValidPrecisionDateTime.StartOfDay].
- * If that _also_ fails, it will return [Invalid], swallowing any [DateTimeParseException]s in the process.
+ * If that _also_ fails, it will return [InvalidPrecisionDateTime.Invalid],
+ * swallowing any [DateTimeParseException]s in the process.
  */
 object DateTimeSerializer : KSerializer<PrecisionDateTime> {
 
@@ -50,7 +89,7 @@ object DateTimeSerializer : KSerializer<PrecisionDateTime> {
         return try {
             try {
                 parseExactDateTime(decodedString)
-            } catch (dateTimeParseException: DateTimeParseException) {
+            } catch (_: DateTimeParseException) {
                 parseStartOfDay(decodedString)
             }
         } catch (dateTimeParseException: DateTimeParseException) {

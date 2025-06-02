@@ -3,11 +3,12 @@ package social.bigbone.api.entity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import social.bigbone.DateTimeSerializer
+import social.bigbone.Dimension
 import social.bigbone.PrecisionDateTime
 
 /**
  * Represents the software instance of Mastodon running on this domain.
- * @see <a href="https://docs.joinmastodon.org/entities/V1_Instance/">Mastodon API V1::Instance</a>
+ * @see <a href="https://docs.joinmastodon.org/entities/Instance/">Mastodon API Instance</a>
  */
 @Serializable
 data class Instance(
@@ -51,6 +52,13 @@ data class Instance(
     val thumbnail: Thumbnail = Thumbnail(),
 
     /**
+     * The list of available size variants for this instance configured icon.
+     * @since Mastodon 4.3.0
+     */
+    @SerialName("icon")
+    val icon: List<InstanceIcon> = emptyList(),
+
+    /**
      * Primary languages of the website and its staff.
      * [List] of [String] (ISO 639-1 two-letter code)
      */
@@ -89,6 +97,7 @@ data class Instance(
 ) {
     /**
      * Usage data for this instance.
+     * @see <a href="https://docs.joinmastodon.org/entities/Instance/#usage">Mastodon API Instance/#usage</a>
      */
     @Serializable
     data class Usage(
@@ -113,6 +122,7 @@ data class Instance(
 
     /**
      * An image used to represent this instance.
+     * @see <a href="https://docs.joinmastodon.org/entities/Instance/#thumbnail">Mastodon API Instance/#thumbnail</a>
      */
     @Serializable
     data class Thumbnail(
@@ -131,6 +141,7 @@ data class Instance(
 
         /**
          * Links to scaled resolution images, for high DPI screens.
+         * @see <a href="https://docs.joinmastodon.org/entities/Instance/#thumbnail-versions">Mastodon API Instance/#thumbnail-versions</a>
          */
         @SerialName("versions")
         val versions: Versions? = null
@@ -153,6 +164,28 @@ data class Instance(
             val resolution2x: String? = null
         )
     }
+
+    /**
+     * An available size variant for this instance configured icon.
+     * @since Mastodon 4.3.0
+     * @see <a href="https://docs.joinmastodon.org/entities/Instance/#InstanceIcon">Mastodon API Instance/#InstanceIcon</a>
+     */
+    @Serializable
+    data class InstanceIcon(
+        /**
+         * The URL of this icon.
+         * @since Mastodon 4.3.0
+         */
+        @SerialName("src")
+        val src: String,
+
+        /**
+         * The size of this icon.
+         * @since Mastodon 4.3.0
+         */
+        @SerialName("size")
+        val size: Dimension
+    )
 
     /**
      * Configured values and limits for this website.
@@ -194,7 +227,21 @@ data class Instance(
          * Hints related to translation.
          */
         @SerialName("translation")
-        val translation: Translation = Translation()
+        val translation: Translation = Translation(),
+
+        /**
+         * Whether federation is limited to explicitly allowed domains.
+         * @since Mastodon 4.4.0
+         */
+        @SerialName("limited_federation")
+        val limitedFederation: Boolean = false,
+
+        /**
+         * The instances VAPID data, used for push notifications.
+         * @since Mastodon 4.3.0
+         */
+        @SerialName("vapid")
+        val vapid: Vapid = Vapid(),
     ) {
         /**
          * URLs of interest for clients apps.
@@ -206,12 +253,33 @@ data class Instance(
              * The Websockets URL for connecting to the streaming API.
              */
             @SerialName("streaming")
-            val streaming: String = ""
+            val streaming: String = "",
+
+            /**
+             * The URL of the server’s about page.
+             * @since Mastodon 4.4.0
+             */
+            @SerialName("about")
+            val about: String = "",
+
+            /**
+             * The URL of the server’s privacy policy.
+             * @since Mastodon 4.4.0
+             */
+            @SerialName("privacy_policy")
+            val privacyPolicy: String? = null,
+
+            /**
+             * The URL of the server’s current terms of service, if any.
+             * @since Mastodon 4.4.0
+             */
+            @SerialName("terms_of_service")
+            val termsOfService: String? = null,
         )
 
         /**
          * Limits related to accounts.
-         * @see <a href="https://docs.joinmastodon.org/entities/V1_Instance/">Mastodon API V1::Instance</a>
+         * @see <a href="https://docs.joinmastodon.org/entities/Instance/#accounts">Mastodon API Instance/#accounts</a>
          */
         @Serializable
         data class Accounts(
@@ -219,12 +287,19 @@ data class Instance(
              * The maximum number of featured tags allowed for each account.
              */
             @SerialName("max_featured_tags")
-            val maxFeaturedTags: Int = 0
+            val maxFeaturedTags: Int = 0,
+
+            /**
+             * The maximum number of pinned statuses for each account.
+             * @since Mastodon 4.3.0
+             */
+            @SerialName("max_pinned_statuses")
+            val maxPinnedStatuses: Int = 0,
         )
 
         /**
          * Limits related to authoring statuses.
-         * @see <a href="https://docs.joinmastodon.org/entities/V1_Instance/">Mastodon API V1::Instance</a>
+         * @see <a href="https://docs.joinmastodon.org/entities/Instance/#statuses">Mastodon API Instance/#statuses</a>
          */
         @Serializable
         data class Statuses(
@@ -249,7 +324,7 @@ data class Instance(
 
         /**
          * Hints for which attachments will be accepted.
-         * @see <a href="https://docs.joinmastodon.org/entities/V1_Instance/">Mastodon API V1::Instance</a>
+         * @see <a href="https://docs.joinmastodon.org/entities/Instance/#media_attachments">Mastodon API Instance/#media_attachments</a>
          */
         @Serializable
         data class MediaAttachments(
@@ -258,6 +333,13 @@ data class Instance(
              */
             @SerialName("supported_mime_types")
             val supportedMimeTypes: List<String> = emptyList(),
+
+            /**
+             * The maximum size of a description, in characters.
+             * @since Mastodon 4.4.0
+             */
+            @SerialName("description_limit")
+            val descriptionLimit: Int = 0,
 
             /**
              * The maximum size of any uploaded image, in bytes.
@@ -292,7 +374,7 @@ data class Instance(
 
         /**
          * Limits related to polls.
-         * @see <a href="https://docs.joinmastodon.org/entities/V1_Instance/">Mastodon API V1::Instance</a>
+         * @see <a href="https://docs.joinmastodon.org/entities/Instance/#polls">Mastodon API Instance/#polls</a>
          */
         @Serializable
         data class Polls(
@@ -323,6 +405,7 @@ data class Instance(
 
         /**
          * Hints related to translation.
+         * @see <a href="https://docs.joinmastodon.org/entities/Instance/#translation">Mastodon API Instance/#translation</a>
          */
         @Serializable
         data class Translation(
@@ -332,10 +415,25 @@ data class Instance(
             @SerialName("enabled")
             val enabled: Boolean = false
         )
+
+        /**
+         * The instances VAPID data, used for push notifications.
+         */
+        @Serializable
+        data class Vapid(
+            /**
+             * The instances VAPID public key, used for push notifications.
+             * The same as [WebPushSubscription.serverKey].
+             * @since Mastodon 4.3.0
+             */
+            @SerialName("public_key")
+            val publicKey: String = ""
+        )
     }
 
     /**
      * Information about registering for this website.
+     * @see <a href="https://docs.joinmastodon.org/entities/Instance/#registrations">Mastodon API Instance/#registrations</a>
      */
     @Serializable
     data class Registrations(
@@ -352,6 +450,14 @@ data class Instance(
         val approvalRequired: Boolean = false,
 
         /**
+         * Whether registrations require the user to provide a reason for joining.
+         * Only applicable when [approvalRequired] is true.
+         * @since Mastodon 4.4.0
+         */
+        @SerialName("reason_required")
+        val reasonRequired: Boolean? = false,
+
+        /**
          * The minimum user age in years, if set.
          * @since Mastodon 4.4.0
          */
@@ -363,11 +469,12 @@ data class Instance(
          * Nullable String (HTML) or null
          */
         @SerialName("message")
-        val message: String? = null
+        val message: String? = null,
     )
 
     /**
      * Information about which version of the API is implemented by this server.
+     * @see <a href="https://docs.joinmastodon.org/entities/Instance/#api-versions">Mastodon API Instance/#api-versions</a>
      */
     @Serializable
     data class ApiVersions(
@@ -381,6 +488,7 @@ data class Instance(
 
     /**
      * Hints related to contacting a representative of the website.
+     * @see <a href="https://docs.joinmastodon.org/entities/Instance/#contact">Mastodon API Instance/#contact</a>
      */
     @Serializable
     data class Contact(
