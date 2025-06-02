@@ -32,7 +32,7 @@ object DimensionSerializer : KSerializer<Dimension> {
         PrimitiveSerialDescriptor("social.bigbone.DimensionSerializer", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: Dimension) {
-        encoder.encodeString("${value.width}x${value.height}")
+        encoder.encodeString(value.toString())
     }
 
     override fun deserialize(decoder: Decoder): Dimension {
