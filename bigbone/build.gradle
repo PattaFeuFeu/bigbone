@@ -19,4 +19,5 @@ dependencies {
     testImplementation libs.mockk
     testImplementation libs.mockk.dsl
     testImplementation libs.okhttp.mockwebserver
+    testImplementation libs.okhttp.mockwebserver.junit5
 }
