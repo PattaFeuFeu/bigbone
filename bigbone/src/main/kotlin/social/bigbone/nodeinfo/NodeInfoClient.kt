@@ -40,7 +40,7 @@ object NodeInfoClient {
                 )
             }
 
-            return response.body?.string()?.let { JSON_SERIALIZER.decodeFromString(it) }
+            return JSON_SERIALIZER.decodeFromString(response.body.string())
         }
     }
 
@@ -67,7 +67,7 @@ object NodeInfoClient {
                 )
             }
 
-            val nodeInfo: NodeInfo? = response.body?.string()?.let { JSON_SERIALIZER.decodeFromString(it) }
+            val nodeInfo: NodeInfo? = JSON_SERIALIZER.decodeFromString(response.body.string())
             if (nodeInfo == null || nodeInfo.links.isEmpty()) {
                 throw ServerInfoUrlRetrievalException(
                     message = "empty link list in well-known NodeInfo location",
