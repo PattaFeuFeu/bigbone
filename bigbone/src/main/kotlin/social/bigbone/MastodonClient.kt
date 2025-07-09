@@ -607,7 +607,7 @@ class MastodonClient private constructor(
             val call = client.newCall(
                 Request(
                     url = url,
-                    method = "delete",
+                    method = "DELETE",
                     body = parameterBody(body)
                 )
             )
