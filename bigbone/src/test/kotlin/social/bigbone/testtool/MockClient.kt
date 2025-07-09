@@ -2,6 +2,7 @@ package social.bigbone.testtool
 
 import io.mockk.every
 import io.mockk.mockk
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.Protocol
 import okhttp3.Request
@@ -43,7 +44,7 @@ object MockClient {
         val response: Response = Response.Builder()
             .code(200)
             .message("OK")
-            .request(Request.Builder().url(requestUrl).build())
+            .request(Request(url = requestUrl.toHttpUrl()))
             .protocol(Protocol.HTTP_1_1)
             .body(clearTextResponse.toResponseBody())
             .build()
@@ -73,7 +74,7 @@ object MockClient {
         val response: Response = Response.Builder()
             .code(responseCode)
             .message(responseMessage)
-            .request(Request.Builder().url(requestUrl).build())
+            .request(Request(url = requestUrl.toHttpUrl()))
             .protocol(Protocol.HTTP_1_1)
             .body(
                 AssetsUtil
@@ -119,7 +120,7 @@ object MockClient {
         val response: Response = Response.Builder()
             .code(200)
             .message("OK")
-            .request(Request.Builder().url(requestUrl).build())
+            .request(Request(url = requestUrl.toHttpUrl()))
             .protocol(Protocol.HTTP_1_1)
             .body(responseBodyMock)
             .build()
@@ -153,7 +154,7 @@ object MockClient {
         val response: Response = Response.Builder()
             .code(responseCode)
             .message(message)
-            .request(Request.Builder().url("https://test.com/").build())
+            .request(Request(url = "https://test.com/".toHttpUrl()))
             .protocol(Protocol.HTTP_1_1)
             .body(
                 AssetsUtil.readFromAssets(responseJsonAssetPath)

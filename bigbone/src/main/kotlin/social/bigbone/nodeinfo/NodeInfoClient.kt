@@ -1,5 +1,6 @@
 package social.bigbone.nodeinfo
 
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -30,10 +31,7 @@ object NodeInfoClient {
     @JvmOverloads
     fun retrieveServerInfo(host: String, scheme: String = "https", port: Int = 443): Server? {
         CLIENT.newCall(
-            Request.Builder()
-                .url(getServerInfoUrl(host = host, scheme = scheme, port = port))
-                .get()
-                .build()
+            Request(url = getServerInfoUrl(host = host, scheme = scheme, port = port).toHttpUrl(), method = "GET")
         ).execute().use { response: Response ->
             if (!response.isSuccessful) {
                 throw ServerInfoRetrievalException(
@@ -42,7 +40,7 @@ object NodeInfoClient {
                 )
             }
 
-            return response.body?.string()?.let { JSON_SERIALIZER.decodeFromString(it) }
+            return JSON_SERIALIZER.decodeFromString(response.body.string())
         }
     }
 
@@ -57,10 +55,10 @@ object NodeInfoClient {
     @Throws(ServerInfoUrlRetrievalException::class)
     private fun getServerInfoUrl(host: String, scheme: String, port: Int): String {
         CLIENT.newCall(
-            Request.Builder()
-                .url("$scheme://$host:$port/.well-known/nodeinfo")
-                .get()
-                .build()
+            Request(
+                url = "$scheme://$host:$port/.well-known/nodeinfo".toHttpUrl(),
+                method = "GET"
+            )
         ).execute().use { response: Response ->
             if (!response.isSuccessful) {
                 throw ServerInfoUrlRetrievalException(
@@ -69,7 +67,7 @@ object NodeInfoClient {
                 )
             }
 
-            val nodeInfo: NodeInfo? = response.body?.string()?.let { JSON_SERIALIZER.decodeFromString(it) }
+            val nodeInfo: NodeInfo? = JSON_SERIALIZER.decodeFromString(response.body.string())
             if (nodeInfo == null || nodeInfo.links.isEmpty()) {
                 throw ServerInfoUrlRetrievalException(
                     message = "empty link list in well-known NodeInfo location",

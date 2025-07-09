@@ -11,7 +11,7 @@ kotlin = "2.2.0"
 kotlin-coroutines = "1.10.2"
 kotlinx-serialization-json = "1.9.0"
 mockk = "1.14.4"
-okhttp = "5.0.0-alpha.17"
+okhttp = "5.1.0"
 rxjava = "3.1.11"
 
 # Gradle plugins
@@ -32,7 +32,9 @@ kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", 
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 mockk-dsl = { module = "io.mockk:mockk-dsl", version.ref = "mockk" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
-okhttp-mockwebserver = { module = "com.squareup.okhttp3:mockwebserver", version.ref = "okhttp" }
+okhttp-mockwebserver = { module = "com.squareup.okhttp3:mockwebserver3", version.ref = "okhttp" }
+okhttp-mockwebserver-junit5 = { module = "com.squareup.okhttp3:mockwebserver3-junit5", version.ref = "okhttp" }
+
 rxjava = { module = "io.reactivex.rxjava3:rxjava", version.ref = "rxjava" }
 
 [plugins]

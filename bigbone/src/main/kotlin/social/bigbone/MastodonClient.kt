@@ -1,6 +1,7 @@
 package social.bigbone
 
 import kotlinx.serialization.SerializationException
+import okhttp3.Headers.Companion.toHeaders
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Interceptor
@@ -604,10 +605,11 @@ class MastodonClient private constructor(
             val url = fullUrl(scheme, getInstance().domain, port, path)
             debugPrintUrl(url)
             val call = client.newCall(
-                Request.Builder()
-                    .url(url)
-                    .delete(parameterBody(body))
-                    .build()
+                Request(
+                    url = url,
+                    method = "DELETE",
+                    body = parameterBody(body)
+                )
             )
             return call.execute()
         } catch (e: IOException) {
@@ -624,12 +626,7 @@ class MastodonClient private constructor(
         try {
             val url = fullUrl(scheme, getInstance().domain, port, path, query)
             debugPrintUrl(url)
-            val call = client.newCall(
-                Request.Builder()
-                    .url(url)
-                    .get()
-                    .build()
-            )
+            val call = client.newCall(Request(url))
             return call.execute()
         } catch (e: IOException) {
             throw BigBoneRequestException("Request not executed due to network IO issue", e)
@@ -643,21 +640,19 @@ class MastodonClient private constructor(
             .build()
 
         return webSocketClient.newWebSocket(
-            request = Request.Builder()
+            request = Request(
+                url = fullUrl(
+                    existingUrl = streamingUrl,
+                    path = "api/v1/streaming",
+                    queryParameters = parameters
+                ),
                 /*
-                OKHTTP doesn't currently (at least when checked in 4.12.0) use the [AuthorizationInterceptor] for
+                OKHTTP doesn't currently (at least when checked in 5.1.0) use the [AuthorizationInterceptor] for
                 WebSocket connections, so we need to set it in the header ourselves again here.
                 See also: https://github.com/square/okhttp/issues/6454
                  */
-                .header("Authorization", "Bearer $accessToken")
-                .url(
-                    fullUrl(
-                        existingUrl = streamingUrl,
-                        path = "api/v1/streaming",
-                        queryParameters = parameters
-                    )
-                )
-                .build(),
+                headers = mapOf("Authorization" to "Bearer $accessToken").toHeaders()
+            ),
             listener = object : WebSocketListener() {
                 override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
                     super.onClosed(webSocket, code, reason)
@@ -730,10 +725,11 @@ class MastodonClient private constructor(
             val url = fullUrl(scheme, getInstance().domain, port, path)
             debugPrintUrl(url)
             val call = client.newCall(
-                Request.Builder()
-                    .url(url)
-                    .patch(parameterBody(body))
-                    .build()
+                Request(
+                    url = url,
+                    method = "PATCH",
+                    body = parameterBody(body)
+                )
             )
             return call.execute()
         } catch (e: IOException) {
@@ -769,14 +765,18 @@ class MastodonClient private constructor(
         try {
             val url = fullUrl(scheme, getInstance().domain, port, path)
             debugPrintUrl(url)
+            val headers: Map<String, String> = if (idempotencyKey != null) {
+                mapOf("Idempotency-Key" to idempotencyKey)
+            } else {
+                emptyMap()
+            }
             val call = client.newCall(
-                Request.Builder().apply {
-                    url(url)
-                    post(body)
-                    idempotencyKey?.let {
-                        header("Idempotency-Key", it)
-                    }
-                }.build()
+                Request(
+                    url = url,
+                    method = "POST",
+                    body = body,
+                    headers = headers.toHeaders()
+                )
             )
             return call.execute()
         } catch (e: IllegalArgumentException) {
@@ -806,10 +806,11 @@ class MastodonClient private constructor(
             val url = fullUrl(scheme, getInstance().domain, port, path)
             debugPrintUrl(url)
             val call = client.newCall(
-                Request.Builder()
-                    .url(url)
-                    .put(body)
-                    .build()
+                Request(
+                    url = url,
+                    method = "PUT",
+                    body = body
+                )
             )
             return call.execute()
         } catch (e: IOException) {
@@ -1030,17 +1031,14 @@ class MastodonClient private constructor(
         internal fun executeInstanceRequest(httpClient: OkHttpClient): Response {
             return httpClient
                 .newCall(
-                    Request.Builder()
-                        .url(
-                            fullUrl(
-                                scheme = scheme,
-                                instanceName = instanceName,
-                                port = port,
-                                path = "api/v2/instance"
-                            )
+                    Request(
+                        url = fullUrl(
+                            scheme = scheme,
+                            instanceName = instanceName,
+                            port = port,
+                            path = "api/v2/instance"
                         )
-                        .get()
-                        .build()
+                    )
                 )
                 .execute()
         }
