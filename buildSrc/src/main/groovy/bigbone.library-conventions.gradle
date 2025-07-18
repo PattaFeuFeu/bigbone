@@ -30,7 +30,7 @@ publishing {
             pom {
                 name = 'BigBone'
                 description = 'Mastodon Client for Java and Kotlin'
-                url = 'https://github.com/andregasser/bigbone/'
+                url = 'https://github.com/pattafeufeu/bigbone/'
                 licenses {
                     license {
                         name = 'MIT License'
@@ -39,15 +39,15 @@ publishing {
                 }
                 developers {
                     developer {
-                        id = 'andregasser'
-                        name = 'André Gasser'
-                        email = 'andre.gasser@protonmail.com'
+                        id = 'pattafeufeu'
+                        name = 'Patrick Geselbracht'
+                        email = 'github@pattafeufeu.de'
                     }
                 }
                 scm {
-                    connection = 'scm:git:git://github.com/andregasser/bigbone.git'
-                    developerConnection = 'scm:git:ssh://github.com:andregasser/bigbone.git'
-                    url = 'https://github.com/andregasser/bigbone'
+                    connection = 'scm:git:git://github.com/pattafeufeu/bigbone.git'
+                    developerConnection = 'scm:git:ssh://github.com:pattafeufeu/bigbone.git'
+                    url = 'https://github.com/pattafeufeu/bigbone'
                 }
             }
             from components.java
