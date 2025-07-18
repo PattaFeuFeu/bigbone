@@ -1,6 +1,6 @@
 # BigBone
 
-![Build](https://github.com/andregasser/bigbone/actions/workflows/build.yml/badge.svg)
+![Build](https://github.com/pattafeufeu/bigbone/actions/workflows/build.yml/badge.svg)
 [![codecov](https://codecov.io/gh/andregasser/bigbone/branch/master/graph/badge.svg?token=3AFHQQH547)](https://codecov.io/gh/andregasser/bigbone)
 ![Latest Snapshot](https://img.shields.io/badge/dynamic/xml?url=https://s01.oss.sonatype.org/content/repositories/snapshots/social/bigbone/bigbone/maven-metadata.xml&label=Latest%20Snapshot&color=blue&query=.//versioning/latest)
 [![Slack](https://img.shields.io/badge/Slack-Join%20the%20discussion-brightgreen?logo=slack&color=%2344BDDF)](https://bigboneworkspace.slack.com/)
@@ -46,7 +46,6 @@ May the BigBone library be as enduring and impactful as its namesake, providing 
 
 The project is currently taken care of by the following people:
 
-- [André Gasser](https://github.com/andregasser/)
 - [Andreas Bartels](https://github.com/bocops)
 - [Patrick Geselbracht](https://github.com/PattaFeuFeu)
 
@@ -73,7 +72,7 @@ With a library like BigBone, you can build tools that allow you to
 **We did not release an official version on Maven Central yet**, but there's a `2.0.0-SNAPSHOT` which you can use to 
 play around / experiment with. Just please be aware that with every new snapshot version, there can be breaking changes 
 along the lines. There will be "darker places" in the library, where stuff will not work as expected. If you find 
-issues, please [file an issue](https://github.com/andregasser/bigbone/issues).  
+issues, please [file an issue](https://github.com/pattafeufeu/bigbone/issues).  
 
 BigBone does not yet implement the full API of Mastodon. Actually, there is still **a lot to do**. For details on the 
 current API coverage please check out our [API Coverage](https://bigbone.social/api-coverage/) page.
@@ -226,7 +225,7 @@ The same applies if you're using BigBone in a Java project.
 
 An Android Studio user reported, that he was not able to use BigBone library in Android Studio, as classes were not
 recognized by the IDE (marked red instead). In this particular case, the fix was to switch/update to Android Studio Giraffe.
-See this issue for more details: https://github.com/andregasser/bigbone/issues/280
+See this issue for more details: https://github.com/pattafeufeu/bigbone/issues/280
 
 # Contribution
 

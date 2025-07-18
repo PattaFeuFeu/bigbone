@@ -15,7 +15,7 @@ to publish a development snapshot for the upcoming `2.0.0` version. The process 
    in the master branch as we'll need it later. For this example, we simply assume it is `aaaaaaa`.
 3. Manually invoke the GitHub `Release` workflow on the master branch. The workflow does the following:
     * Builds, signs and publishes the most recent version of the `master` branch to the Maven Central Snapshot Repository.
-    * Creates a new draft of a release notes page [here](https://github.com/andregasser/bigbone/releases).
+    * Creates a new draft of a release notes page [here](https://github.com/pattafeufeu/bigbone/releases).
 4. Once the workflow has successfully finished, the new development snapshot is published. Now do the following:
     * Verify, that the binaries have been successfully uploaded to the Maven Central Snapshot Repository by visiting
       the [Maven Central repository URL for BigBone snapshots]( https://s01.oss.sonatype.org/content/repositories/snapshots/social/bigbone/bigbone/).
@@ -41,7 +41,7 @@ Central by performing the following steps in order:
 4. Since you've pushed a tag matching the pattern `vX.Y.Z`, the GitHub `Release` workflow is automatically executed. The
    workflow does the following:
     * Builds, signs and publishes tag `v2.0.0` to Maven Central.
-    * Creates a new draft of a release notes page [here](https://github.com/andregasser/bigbone/releases).
+    * Creates a new draft of a release notes page [here](https://github.com/pattafeufeu/bigbone/releases).
 5. Once the workflow has successfully finished, please do the following:
     * Verify, that the binaries have been successfully uploaded to Maven Central by visiting the [Maven Central
       repository URL for BigBone releases](https://repo1.maven.org/maven2/social/bigbone).
