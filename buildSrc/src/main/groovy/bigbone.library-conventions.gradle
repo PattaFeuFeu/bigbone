@@ -7,6 +7,9 @@ plugins {
     id 'jacoco'
 }
 
+def sonatypeUsername = System.getenv("SONATYPE_USERNAME") ?: ""
+def sonatypePassword = System.getenv("SONATYPE_PASSWORD") ?: ""
+
 publishing {
     repositories {
         maven {
@@ -15,12 +18,12 @@ publishing {
         }
         maven {
             name = "mavenCentral"
-            def releasesRepoUrl = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-            def snapshotsRepoUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+            def releasesRepoUrl = "https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/"
+            def snapshotsRepoUrl = "https://central.sonatype.com/repository/maven-snapshots/"
             url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
             credentials {
-                username = System.getenv("SONATYPE_USERNAME") ?: ""
-                password = System.getenv("SONATYPE_PASSWORD") ?: ""
+                username = sonatypeUsername
+                password = sonatypePassword
             }
         }
 
@@ -57,14 +60,12 @@ publishing {
 
 signing {
     required {
-        project.hasProperty("signingKeyId")
         project.hasProperty("signingKey")
         project.hasProperty("signingPassword")
     }
-    def signingKeyId = findProperty("signingKeyId")
     def signingKey = findProperty("signingKey")
     def signingPassword = findProperty("signingPassword")
-    useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+    useInMemoryPgpKeys(signingKey, signingPassword)
     sign publishing.publications.bigbone
 }
 
@@ -77,5 +78,56 @@ jacocoTestReport {
         xml.required.set(true)
         csv.required.set(false)
         html.outputLocation.set(file("${layout.buildDirectory}/reports/jacoco"))
+    }
+}
+
+// Notify Maven Central about the upload after the upload as otherwise, it won’t be visible
+// See https://central.sonatype.org/publish/publish-portal-ossrh-staging-api/#ensuring-deployment-visibility-in-the-central-publisher-portal
+if (!rootProject.tasks.named("notifyCentralPortal")) {
+    rootProject.tasks.register("notifyCentralPortal") {
+        group = "publishing"
+        description = "Notify Central Portal after Maven publish"
+
+        doLast {
+            def groupId = 'io.github.pattafeufeu'
+            def username = sonatypeUsername
+            def password = sonatypePassword
+            if (!username || !password) throw new GradleException("Missing OSSRH credentials.")
+
+            def authString = "${username}:${password}".bytes.encodeBase64().toString()
+            def urlStr = "https://ossrh-staging-api.central.sonatype.com/manual/upload/defaultRepository/${groupId}"
+            def url = new URL(urlStr)
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection()
+            connection.setRequestMethod("POST")
+            connection.setRequestProperty("Authorization", "Basic ${authString}")
+            connection.setDoOutput(true)
+            connection.connect()
+
+            // Send empty body (manual upload API expects a POST, but content is empty)
+            connection.outputStream.withCloseable { output ->
+                // No content to write
+            }
+
+            int responseCode = connection.responseCode
+            String responseMsg = connection.responseMessage
+            if (responseCode < 200 || responseCode >= 300) {
+                def errorStream = connection.getErrorStream()
+                def errorMsg = errorStream ? errorStream.text : ""
+                throw new GradleException("Failed to notify Central Portal: ${responseCode} ${responseMsg} - ${errorMsg}")
+            } else {
+                println("✅ Successfully notified Central Portal for groupId: ${groupId}")
+            }
+        }
+    }
+}
+
+
+gradle.taskGraph.whenReady { graph ->
+    def publishTasks = allTasks.findAll { it.name == "publish" }
+    def notifyTask = rootProject.tasks.named("notifyCentralPortal").get()
+    // Run notifyCentralPortal after publish tasks
+    publishTasks.each { pubTask -> notifyTask.mustRunAfter(pubTask) }
+    if (!publishTasks.isEmpty()) {
+        allTasks.last()?.finalizedBy(notifyTask)
     }
 }
