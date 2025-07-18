@@ -1,4 +1,4 @@
-group = "social.bigbone"
+group = "io.github.pattafeufeu"
 version = libs.versions.bigbone.get()
 
 tasks.withType(Test).configureEach {
