@@ -20,6 +20,12 @@ If your application does not require reactive functionality, you can omit the `b
 steps. BigBone uses RxJava for implementing the reactive part. Check out [their website](https://github.com/ReactiveX/RxJava) 
 to get more information.
 
+{: .note }
+The project has been switched over from @andregasser to @pattafeufeu in 2025.
+We decided to not renew the domain _bigbone.social_ for cost reasons and will thus let it run out.
+For that reason, we’re already switching to a GitHub-namespace-based mode now which unfortunately leads to a change
+in how you need to declare the dependency (previously `social.bigbone`, now `io.github.pattafeufeu`).
+
 ### Gradle (Groovy DSL)
 
 Instructions for adding BigBone `2.0.0-SNAPSHOT` to your Gradle project (using Groovy DSL):
@@ -38,9 +44,9 @@ Dependencies:
 
 ```groovy
 dependencies {
-    implementation "social.bigbone:bigbone:2.0.0-SNAPSHOT"
+    implementation "io.github.pattafeufeu:bigbone:2.0.0-SNAPSHOT"
     // Optional, if you want to use the BigBone RxJava3 wrappers
-    implementation "social.bigbone:bigbone-rx:2.0.0-SNAPSHOT"
+    implementation "io.github.pattafeufeu:bigbone-rx:2.0.0-SNAPSHOT"
 }
 ```
 
@@ -62,9 +68,9 @@ Dependencies:
 
 ```groovy
 dependencies {
-    implementation("social.bigbone:bigbone:2.0.0-SNAPSHOT")
+    implementation("io.github.pattafeufeu:bigbone:2.0.0-SNAPSHOT")
     // Optional, if you want to use the BigBone RxJava3 wrappers
-    implementation("social.bigbone:bigbone-rx:2.0.0-SNAPSHOT")
+    implementation("io.github.pattafeufeu:bigbone-rx:2.0.0-SNAPSHOT")
 }
 ```
 
@@ -94,14 +100,14 @@ Dependencies:
 
 ```xml
 <dependency>
-    <groupId>social.bigbone</groupId>
+    <groupId>io.github.pattafeufeu</groupId>
     <artifactId>bigbone</artifactId>
     <version>2.0.0-SNAPSHOT</version>
 </dependency>
 
         <!-- Optional, if you want to use the BigBone RxJava3 wrappers -->
 <dependency>
-    <groupId>social.bigbone</groupId>
+<groupId>io.github.pattafeufeu</groupId>
     <artifactId>bigbone-rx</artifactId>
     <version>2.0.0-SNAPSHOT</version>
 </dependency>
