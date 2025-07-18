@@ -11,13 +11,13 @@ support. We value transparency and traceability. For this reason, we limit ourse
 ### GitHub Issues
 
 If you have found a bug or want to submit a request for a new feature, please 
-[open an issue](https://github.com/andregasser/bigbone/issues). Please make sure that you create an accurate problem 
+[open an issue](https://github.com/pattafeufeu/bigbone/issues). Please make sure that you create an accurate problem 
 description that allows us to reproduce the issue.
 
 ### GitHub Discussions
 
 If you have a question about using BigBone or other topics that are not necessarily considered issues, please 
-[open a discussion thread](https://github.com/andregasser/bigbone/discussions). We will try to help you as good as 
+[open a discussion thread](https://github.com/pattafeufeu/bigbone/discussions). We will try to help you as good as 
 possible. If necessary, we can open an issue for this after, if needed.
 
 ## Managing Expectations
