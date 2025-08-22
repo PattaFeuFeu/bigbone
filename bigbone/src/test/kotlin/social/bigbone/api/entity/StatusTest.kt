@@ -23,6 +23,34 @@ class StatusTest {
     }
 
     @Test
+    fun deserializeStatusWithQuote() {
+        val json = AssetsUtil.readFromAssets("status_with_quote.json")
+        val status: Status = JSON_SERIALIZER.decodeFromString(json)
+        status.quote?.state shouldBeEqualTo Quote.State.ACCEPTED
+        status.quote?.quotedStatus?.account?.id shouldBeEqualTo "14477"
+        status.quote?.quotedStatus?.id shouldBeEqualTo "11112"
+        status.quote?.quotedStatusId shouldBeEqualTo null
+    }
+
+    @Test
+    fun deserializeStatusWithShallowQuote() {
+        val json = AssetsUtil.readFromAssets("status_with_shallow_quote.json")
+        val status: Status = JSON_SERIALIZER.decodeFromString(json)
+        status.quote?.state shouldBeEqualTo Quote.State.ACCEPTED
+        status.quote?.quotedStatus shouldBeEqualTo null
+        status.quote?.quotedStatusId shouldBeEqualTo "999999"
+    }
+
+    @Test
+    fun deserializeStatusWithRevokedQuote() {
+        val json = AssetsUtil.readFromAssets("status_with_revoked_quote.json")
+        val status: Status = JSON_SERIALIZER.decodeFromString(json)
+        status.quote?.state shouldBeEqualTo Quote.State.REVOKED
+        status.quote?.quotedStatus shouldBeEqualTo null
+        status.quote?.quotedStatusId shouldBeEqualTo null
+    }
+
+    @Test
     fun constructor() {
         val status = Status(id = "123", visibility = Visibility.PRIVATE)
         status.id shouldBeEqualTo "123"
