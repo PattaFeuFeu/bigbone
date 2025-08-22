@@ -168,6 +168,12 @@ data class Status(
     val editedAt: PrecisionDateTime = InvalidPrecisionDateTime.Unavailable,
 
     /**
+     * Information about the status being quoted, if any.
+     */
+    @SerialName("quote")
+    val quote: Quote? = null,
+
+    /**
      * If the current token has an authorized user: Have you favourited this status? (optional)
      */
     @SerialName("favourited")
