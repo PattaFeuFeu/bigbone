@@ -21,7 +21,7 @@ data class Quote(
 
     /**
      * The status being quoted, if the quote has been accepted. This will be null, unless the state attribute is accepted.
-     * Note: only one of this and quotedStatusId will ever be non-null.
+     * Note: only one of this and [quotedStatusId] will ever be non-null.
      */
     @SerialName("quoted_status")
     val quotedStatus: Status? = null,
