@@ -18,7 +18,7 @@ rxjava = "3.1.12"
 jacoco = "0.8.9"
 dependency-analysis = "2.19.0"
 detekt = "1.23.8"
-versions = "0.52.0"
+versions = "0.53.0"
 ktlint = "12.3.0"
 
 [libraries]
