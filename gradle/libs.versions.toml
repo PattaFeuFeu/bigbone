@@ -5,7 +5,7 @@ bigbone = "2.0.0-SNAPSHOT"
 # 3rd party dependencies
 junit-jupiter = "5.13.4"
 junit-platform-suite-engine = "1.13.4"
-junit-platform-launcher = "1.13.4"
+junit-platform-launcher = "6.0.0"
 kluent = "1.73"
 kotlin = "2.2.20"
 kotlin-coroutines = "1.10.2"
