@@ -3,7 +3,7 @@
 bigbone = "2.0.0-SNAPSHOT"
 
 # 3rd party dependencies
-junit-jupiter = "5.13.4"
+junit-jupiter = "6.0.0"
 junit-platform-suite-engine = "6.0.0"
 junit-platform-launcher = "6.0.0"
 kluent = "1.73"
