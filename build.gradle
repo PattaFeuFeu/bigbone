@@ -2,4 +2,18 @@ plugins {
     alias(libs.plugins.dependency.analysis)
     alias(libs.plugins.detekt)
     alias(libs.plugins.versions)
+    alias(libs.plugins.nmcp.aggregation)
+}
+
+nmcpAggregation {
+    centralPortal {
+        username = providers.environmentVariable('OSS_SONATYPE_USERNAME')
+        password = providers.environmentVariable('OSS_SONATYPE_PASSWORD')
+        publishingType = 'AUTOMATIC'
+    }
+    publishAllProjectsProbablyBreakingProjectIsolation()
+}
+
+tasks.register('printVersion') {
+    doLast { println(libs.versions.bigbone.get()) }
 }

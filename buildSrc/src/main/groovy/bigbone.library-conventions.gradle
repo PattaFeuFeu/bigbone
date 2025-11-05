@@ -13,30 +13,24 @@ publishing {
             name = "localBuildRepo"
             url = rootProject.file("build/repo")
         }
-        maven {
-            name = "mavenCentral"
-            def releasesRepoUrl = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-            def snapshotsRepoUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
-            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
-            credentials {
-                username = System.getenv("SONATYPE_USERNAME") ?: ""
-                password = System.getenv("SONATYPE_PASSWORD") ?: ""
-            }
-        }
-
     }
     publications {
         bigbone(MavenPublication) {
+            from components.java
+            artifactId = project.name
+
             pom {
                 name = 'BigBone'
                 description = 'Mastodon Client for Java and Kotlin'
                 url = 'https://github.com/pattafeufeu/bigbone/'
+
                 licenses {
                     license {
                         name = 'MIT License'
                         url = 'https://opensource.org/licenses/MIT'
                     }
                 }
+
                 developers {
                     developer {
                         id = 'pattafeufeu'
@@ -44,27 +38,25 @@ publishing {
                         email = 'github@pattafeufeu.de'
                     }
                 }
+
                 scm {
                     connection = 'scm:git:git://github.com/pattafeufeu/bigbone.git'
                     developerConnection = 'scm:git:ssh://github.com:pattafeufeu/bigbone.git'
                     url = 'https://github.com/pattafeufeu/bigbone'
                 }
             }
-            from components.java
         }
     }
 }
 
 signing {
     required {
-        project.hasProperty("signingKeyId")
         project.hasProperty("signingKey")
         project.hasProperty("signingPassword")
     }
-    def signingKeyId = findProperty("signingKeyId")
     def signingKey = findProperty("signingKey")
     def signingPassword = findProperty("signingPassword")
-    useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+    useInMemoryPgpKeys(signingKey, signingPassword)
     sign publishing.publications.bigbone
 }
 

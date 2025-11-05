@@ -20,6 +20,7 @@ dependency-analysis = "2.19.0"
 detekt = "1.23.8"
 versions = "0.53.0"
 ktlint = "12.3.0"
+nmcp-aggregation = "1.2.0"
 
 [libraries]
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
@@ -44,3 +45,4 @@ dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version.r
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 versions = { id = "com.github.ben-manes.versions", version.ref = "versions" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
+nmcp-aggregation = { id = "com.gradleup.nmcp.aggregation", version.ref = "nmcp-aggregation" }

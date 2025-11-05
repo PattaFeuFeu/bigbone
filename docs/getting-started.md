@@ -35,7 +35,7 @@ Repository:
 ```groovy
 repositories {
     maven {
-        url "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+        url "https://central.sonatype.com/repository/maven-snapshots/"
     }
 }
 ```
@@ -59,7 +59,7 @@ Repository:
 ```groovy
 repositories {
     maven {
-        url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+        url = uri("https://central.sonatype.com/repository/maven-snapshots/")
     }
 }
 ```
@@ -85,7 +85,7 @@ Repository:
     <repository>
         <id>maven-central-snapshots</id>
         <name>Maven Central Snapshot Repository</name>
-        <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+        <url>https://central.sonatype.com/repository/maven-snapshots/</url>
         <releases>
             <enabled>false</enabled>
         </releases>
