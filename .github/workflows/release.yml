@@ -6,9 +6,6 @@ on:
       # Run on any release tag formatted like v2.0.0
       # Do not run on snapshot tags formatted like v2.0.0-20240518.225913
       - v[2-9].[0-9]+.[0-9]+
-  workflow_dispatch:
-    # Allows the GitHub action to be executed manually (we do this for snapshot builds by running this
-    # action on the master branch.
 
 # Cancel any already running builds with that git reference
 concurrency:
@@ -22,6 +19,15 @@ jobs:
       - name: Checkout project sources
         uses: actions/checkout@v6
 
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: gradle
+          gpg-private-key: ${{ secrets.SIGNING_PRIVATE_KEY }}
+          gpg-passphrase: ${{ secrets.SIGNING_PASSWORD }}
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
 
@@ -31,13 +37,19 @@ jobs:
       - name: Assemble the library for use in GitHub release
         run: ./gradlew assemble generatePomFileForBigbonePublication
 
+      - name: Read project version
+        id: projectversion
+        run: echo "version=$(./gradlew -q printVersion)" >> "$GITHUB_OUTPUT"
+
       - name: Publish the library
-        run: ./gradlew publish
         env:
           SONATYPE_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
           SONATYPE_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SIGNING_PRIVATE_KEY }}
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGNING_PASSWORD }}
+        run: |
+          VERSION=${{ steps.projectversion.outputs.version }}
+          ./gradlew -Pversion="$VERSION" clean publishAggregationToCentralPortal --stacktrace
 
       - name: ZIP files
         id: zip-files
@@ -59,7 +71,7 @@ jobs:
         with:
           tag_name: ${{ github.ref_name }}
           name: ${{ github.ref_name }}
-          prerelease: true
+          prerelease: false
           draft: true
           fail_on_unmatched_files: true
           files: ./${{ steps.zip-files.outputs.zipArchive }}
