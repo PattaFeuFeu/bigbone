@@ -19,7 +19,7 @@ to a directory of your choice and then run a `gradlew check` from within the roo
 everything builds correctly and the tests run fine. We use [Gradle](https://gradle.org/) to build the project. Don't 
 worry if you do not have it installed on your machine, as it will be downloaded automatically during the first build.
 
-Please also note that the project requires at least Java 8 in order to build successfully.
+Please also note that the project requires at least Java 17 in order to build successfully.
 
 ### Project Structure Overview
 
