@@ -1,0 +1,114 @@
+name: Snapshot
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Git ref (branch or commit) to use for snapshot'
+        required: true
+        default: master
+      label:
+        description: 'Optional label appended to the tag (e.g. rc1)'
+        required: false
+
+# Cancel any already running builds with that git reference
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  publish-snapshot:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout project sources
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: gradle
+          gpg-private-key: ${{ secrets.SIGNING_PRIVATE_KEY }}
+          gpg-passphrase: ${{ secrets.SIGNING_PASSWORD }}
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Ensure that all required checks pass
+        run: ./gradlew check
+
+      - name: Assemble the library for use in GitHub release
+        run: ./gradlew assemble generatePomFileForBigbonePublication
+
+      - name: Publish the library
+        env:
+          SONATYPE_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
+          SONATYPE_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SIGNING_PRIVATE_KEY }}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGNING_PASSWORD }}
+        run: ./gradlew publishAggregationToCentralPortalSnapshots --stacktrace
+
+      - name: Read project version
+        id: projectversion
+        run: echo "version=$(./gradlew -q printVersion)" >> "$GITHUB_OUTPUT"
+
+      - name: Ensure version is a SNAPSHOT
+        run: |
+          v="${{ steps.projectversion.outputs.version }}"
+          [[ "$v" == *-SNAPSHOT ]] || { echo "Version '$v' is not a -SNAPSHOT"; exit 1; }
+
+      - name: Compute tag + release name
+        id: tag
+        run: |
+          formattedDate=$(date +%Y%m%d.%H%M%S)
+          short=${GITHUB_SHA::7}
+          suffix="${{ inputs.label }}"
+          [ -n "$suffix" ] && suffix=".$suffix"
+
+          echo "tag=snapshot-v${{ steps.projectversion.outputs.version }}.$formattedDate.$short$suffix" >> "$GITHUB_OUTPUT"
+          echo "name=Snapshot ${{ steps.projectversion.outputs.version }} ($formattedDate, $short)" >> "$GITHUB_OUTPUT"
+
+      - name: ZIP files
+        id: zip-files
+        run: |
+          tagName=${{ github.ref_name }}
+
+          formattedDate=$(date +%Y%m%d.%H%M%S)
+          archiveName=BigBone-$tagName-$formattedDate.zip
+
+          # Get all JARs and POM files and zip them into an archive with archiveName
+          find bigbone/build/libs bigbone/build/publications -type f \( -name "*.jar" -o -name "*pom*.xml" \) -print | zip $archiveName -@
+
+          # Save archive name for reuse in later action steps
+          echo "zipArchive=$archiveName" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub pre-release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          target_commitish: ${{ github.sha }}
+          name: ${{ steps.tag.outputs.name }}
+          draft: true
+          prerelease: true
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+          files: ./${{ steps.zip-files.outputs.zipArchive }}
+          body: |
+            Manual snapshot from `${{ github.ref_name }}` at ${{ github.sha }}.
+
+            **Maven Central Snapshots usage**
+            ```groovy
+            repositories {
+                maven { url = uri("https://central.sonatype.com/repository/maven-snapshots/") }
+            }
+            dependencies {
+                implementation "io.github.pattafeufeu:bigbone:${{ steps.projectversion.outputs.version }}"
+                implementation "io.github.pattafeufeu:bigbone-rx:${{ steps.projectversion.outputs.version }}"
+            }
+            ```

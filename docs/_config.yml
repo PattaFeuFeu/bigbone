@@ -2,7 +2,7 @@ title: BigBone
 description: A Mastodon Client Library for Java and Kotlin
 remote_theme: just-the-docs/just-the-docs
 aux_links:
-  GitHub Repo: https://github.com/andregasser/bigbone
+  GitHub Repo: https://github.com/pattafeufeu/bigbone
 aux_links_new_tab: true
 heading_anchors: true
 color_scheme: light

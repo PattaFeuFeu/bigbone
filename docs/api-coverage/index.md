@@ -39,5 +39,5 @@ In the __Comments__ column, we provide more information what exactly is missing 
 BigBone offers reactive endpoints based on RxJava as well. We have not listed the detailed implementation status here, but we are aware that not all endpoints
 are offered as rx endpoints yet. It might also happen that they are not complete in terms of parameters or response objects. We will try to clean this up as 
 we go along and implement missing functionality. If you think, a specific rx endpoint is critical to have, please open an issue in the
-[Issues](https://github.com/andregasser/bigbone/issues) section or even better, provide a pull request.
+[Issues](https://github.com/pattafeufeu/bigbone/issues) section or even better, provide a pull request.
 
