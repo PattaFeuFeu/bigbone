@@ -10,7 +10,7 @@ kluent = "1.73"
 kotlin = "2.2.21"
 kotlin-coroutines = "1.10.2"
 kotlinx-serialization-json = "1.9.0"
-mockk = "1.14.6"
+mockk = "1.14.7"
 okhttp = "5.3.2"
 rxjava = "3.1.12"
 
