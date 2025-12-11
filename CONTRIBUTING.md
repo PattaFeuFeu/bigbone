@@ -49,7 +49,7 @@ Additionally, there are other folders within the project, including:
 Now as everything is set up nicely on your local machine, it is time to find something for you to work on. Here are some
 ideas for you:
 
-- **Good First Issues**: Check our [issue tracker](https://github.com/andregasser/bigbone/issues) for issues labeled 
+- **Good First Issues**: Check our [issue tracker](https://github.com/pattafeufeu/bigbone/issues) for issues labeled 
   `good first issue`. These are usually good tasks to get started and get into the project.
 - **API Coverage**: Visit our [API Coverage](https://bigbone.social/api-coverage/) page and look for entries highlighted
   in orange. These are endpoints that are not yet fully implemented. Most of the time there is a parameter missing that 
@@ -84,7 +84,7 @@ Whenever you get stuck while trying to contribute to the project, you can reach 
 one of the channels listed below as they provide maximum transparency for the project and it allows us to keep a good 
 historical record of communication. 
 
-- **Slack**: BigBone developers use [Slack](https://github.com/andregasser/bigbone/discussions/151) to coordinate work 
+- **Slack**: BigBone developers use [Slack](https://github.com/pattafeufeu/bigbone/discussions/151) to coordinate work 
   between developers. We would appreciate it, if you join our `#bigbone-development` channel. Also, it allows you to 
   reach individual developers directly.
 - **GitHub Issues**: If you are working on an existing GitHub issue, feel free to discuss your problems on that issue 
@@ -114,7 +114,7 @@ notifications turned on, ensuring you get notified when someone adds a comment t
 ## Report an Issue
 
 We use GitHub issues to track issues. Whenever you find an issue in our library, whether it is a problem in the code or 
-in the documentation, please [open a new issue](https://github.com/andregasser/bigbone/issues). Make sure you provide as
+in the documentation, please [open a new issue](https://github.com/pattafeufeu/bigbone/issues). Make sure you provide as
 much information as possible. It should be possible for us to reproduce the issue easily. Great issue reports have:
 
 - A quick summary and/or background

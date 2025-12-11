@@ -1,8 +1,8 @@
 # BigBone
 
-![Build](https://github.com/andregasser/bigbone/actions/workflows/build.yml/badge.svg)
+![Build](https://github.com/pattafeufeu/bigbone/actions/workflows/build.yml/badge.svg)
 [![codecov](https://codecov.io/gh/andregasser/bigbone/branch/master/graph/badge.svg?token=3AFHQQH547)](https://codecov.io/gh/andregasser/bigbone)
-![Latest Snapshot](https://img.shields.io/badge/dynamic/xml?url=https://s01.oss.sonatype.org/content/repositories/snapshots/social/bigbone/bigbone/maven-metadata.xml&label=Latest%20Snapshot&color=blue&query=.//versioning/latest)
+![Latest Snapshot](https://img.shields.io/badge/dynamic/xml?url=https://central.sonatype.com/repository/maven-snapshots/social/bigbone/bigbone/maven-metadata.xml&label=Latest%20Snapshot&color=blue&query=.//versioning/latest)
 [![Slack](https://img.shields.io/badge/Slack-Join%20the%20discussion-brightgreen?logo=slack&color=%2344BDDF)](https://bigboneworkspace.slack.com/)
 
 **BigBone** is a [Mastodon](https://docs.joinmastodon.org/) client library for Java and Kotlin.
@@ -46,7 +46,6 @@ May the BigBone library be as enduring and impactful as its namesake, providing 
 
 The project is currently taken care of by the following people:
 
-- [André Gasser](https://github.com/andregasser/)
 - [Andreas Bartels](https://github.com/bocops)
 - [Patrick Geselbracht](https://github.com/PattaFeuFeu)
 
@@ -73,7 +72,7 @@ With a library like BigBone, you can build tools that allow you to
 **We did not release an official version on Maven Central yet**, but there's a `2.0.0-SNAPSHOT` which you can use to 
 play around / experiment with. Just please be aware that with every new snapshot version, there can be breaking changes 
 along the lines. There will be "darker places" in the library, where stuff will not work as expected. If you find 
-issues, please [file an issue](https://github.com/andregasser/bigbone/issues).  
+issues, please [file an issue](https://github.com/pattafeufeu/bigbone/issues).  
 
 BigBone does not yet implement the full API of Mastodon. Actually, there is still **a lot to do**. For details on the 
 current API coverage please check out our [API Coverage](https://bigbone.social/api-coverage/) page.
@@ -96,6 +95,12 @@ BigBone consists of two main modules:
 To find out more about the RxJava3 module—especially about default error handling—, please check
 the [`bigbone-rx` README](bigbone-rx/README.md).
 
+> [!IMPORTANT]
+> The project has been switched over from @andregasser to @pattafeufeu in 2025.
+> We decided to not renew the domain _bigbone.social_ for cost reasons and will thus let it run out.
+> For that reason, we’re already switching to a GitHub-namespace-based mode now which unfortunately leads to a change
+> in how you need to declare the dependency (previously `social.bigbone`, now `io.github.pattafeufeu`).
+
 
 ## Gradle (Groovy DSL)
 
@@ -106,18 +111,22 @@ Repository:
 ```groovy
 repositories {
     maven {
-        url "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+      url "https://central.sonatype.com/repository/maven-snapshots/"
     }
 }
 ```
 
 Dependencies:
 
+> [!TIP]
+> If you previously declared the dependency using `social.bigbone`, please switch to `io.github.pattafeufeu`.
+> See explanation further up for why that is.
+
 ```groovy
 dependencies {
-    implementation "social.bigbone:bigbone:2.0.0-SNAPSHOT"
+    implementation "io.github.pattafeufeu:bigbone:2.0.0-SNAPSHOT"
     // Optional, if you want to use the BigBone RxJava3 wrappers
-    implementation "social.bigbone:bigbone-rx:2.0.0-SNAPSHOT"
+    implementation "io.github.pattafeufeu:bigbone-rx:2.0.0-SNAPSHOT"
 }
 ```
 
@@ -130,18 +139,22 @@ Repository:
 ```groovy
 repositories {
     maven {
-        url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+      url = uri("https://central.sonatype.com/repository/maven-snapshots/")
     }
 }
 ```
 
 Dependencies:
 
+> [!TIP]
+> If you previously declared the dependency using `social.bigbone`, please switch to `io.github.pattafeufeu`.
+> See explanation further up for why that is.
+
 ```groovy
 dependencies {
-    implementation("social.bigbone:bigbone:2.0.0-SNAPSHOT")
+    implementation("io.github.pattafeufeu:bigbone:2.0.0-SNAPSHOT")
     // Optional, if you want to use the BigBone RxJava3 wrappers
-    implementation("social.bigbone:bigbone-rx:2.0.0-SNAPSHOT")
+    implementation("io.github.pattafeufeu:bigbone-rx:2.0.0-SNAPSHOT")
 }
 ```
 
@@ -156,7 +169,7 @@ Repository:
     <repository>
         <id>maven-central-snapshots</id>
         <name>Maven Central Snapshot Repository</name>
-        <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+      <url>https://central.sonatype.com/repository/maven-snapshots/</url>
         <releases>
             <enabled>false</enabled>
         </releases>
@@ -169,16 +182,20 @@ Repository:
 
 Dependencies:
 
+> [!TIP]
+> If you previously declared the dependency using `social.bigbone`, please switch to `io.github.pattafeufeu`.
+> See explanation further up for why that is.
+
 ```xml
 <dependency>
-    <groupId>social.bigbone</groupId>
+    <groupId>io.github.pattafeufeu</groupId>
     <artifactId>bigbone</artifactId>
     <version>2.0.0-SNAPSHOT</version>
 </dependency>
 
         <!-- Optional, if you want to use the BigBone RxJava3 wrappers -->
 <dependency>
-    <groupId>social.bigbone</groupId>
+    <groupId>io.github.pattafeufeu</groupId>
     <artifactId>bigbone-rx</artifactId>
     <version>2.0.0-SNAPSHOT</version>
 </dependency>
@@ -226,7 +243,7 @@ The same applies if you're using BigBone in a Java project.
 
 An Android Studio user reported, that he was not able to use BigBone library in Android Studio, as classes were not
 recognized by the IDE (marked red instead). In this particular case, the fix was to switch/update to Android Studio Giraffe.
-See this issue for more details: https://github.com/andregasser/bigbone/issues/280
+See this issue for more details: https://github.com/pattafeufeu/bigbone/issues/280
 
 # Contribution
 
