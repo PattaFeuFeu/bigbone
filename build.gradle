@@ -7,8 +7,8 @@ plugins {
 
 nmcpAggregation {
     centralPortal {
-        username = providers.environmentVariable('OSS_SONATYPE_USERNAME')
-        password = providers.environmentVariable('OSS_SONATYPE_PASSWORD')
+        username = providers.environmentVariable('SONATYPE_USERNAME')
+        password = providers.environmentVariable('SONATYPE_PASSWORD')
         publishingType = 'AUTOMATIC'
     }
     publishAllProjectsProbablyBreakingProjectIsolation()
