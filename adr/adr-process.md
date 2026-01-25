@@ -2,11 +2,15 @@
 
 ## Overview
 
-In the BigBone project, we use ADRs to log the outcome of design and decision making activities. Hence, we can view them
-as journals, akin to meeting outcome summaries or discussion notes. ADRs help future developers to better understand why
-things are done in a particular way.
+When writing/maintaining software, developers often have to make architectural design decisions. In the BigBone project, 
+we use Architectural Decision Records (ADRs) to log the outcome of the decision-making process behind. ADRs are 
+typically created for design decisions that address a functional or non-functional requirement that is architecturally
+significant. Hence, we can view them as journals, akin to meeting outcome summaries or discussion notes. ADRs help 
+future developers to better understand why things are done in a particular way.
 
 ## Process
+
+## ADR Creation
 
 The process for discussing architectural or design topics is initiated by first identifying a need for discussing it.
 Once the team has agreed that there is a real need for having an in-depth discussion, the process is initiated as
@@ -20,7 +24,12 @@ follows:
 3. Also please place a link in the discussion thread that points to the newly created ADR.
 4. If concrete action needs to be taken, please open issues for all of them and refer to the ADR.
 
+## ADR Review
+
+
+
 ## More on ADRs
 
 - https://adr.github.io/
-- https://www.ozimmer.ch/practices/2023/04/03/ADRCreation.html (best practices, anti-patterns and such)
+- https://www.ozimmer.ch/practices/2023/04/03/ADRCreation.html
+- https://docs.aws.amazon.com/prescriptive-guidance/latest/architectural-decision-records/adr-process.html

@@ -2,7 +2,12 @@
 
 ## Status
 
-The status of this ADR. It can be either Proposed, Accepted, Rejected, Deprecated, Superseded.
+The status of this ADR. Valid statuses are:
+
+- Proposed: ADRs in the Proposed state are ready for review.
+- Accepted: An ADR which was accepted by the team.
+- Rejected: An ADR which was rejected by the team.
+- Superseded: An ADR which was replaced by a newer one.
 
 ## Context
 
