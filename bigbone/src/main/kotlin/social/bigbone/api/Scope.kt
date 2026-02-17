@@ -146,6 +146,19 @@ class Scope(private vararg val scopes: Name) {
     }
 
     /**
+     * Scopes granting access to profile information about the currently authenticated user.
+     * Currently, only [PROFILE.ALL] exists.
+     */
+    object PROFILE {
+
+        /**
+         * Grants access to only minimal information about the currently authenticated user.
+         */
+        @JvmField
+        val ALL = Name { "profile" }
+    }
+
+    /**
      * Scopes granting access to Web Push API subscriptions are grouped here. Currently, only [PUSH.ALL] exists.
      */
     object PUSH {
@@ -273,6 +286,8 @@ class Scope(private vararg val scopes: Name) {
             Pair(WRITE.NOTIFICATIONS.name(), WRITE.NOTIFICATIONS),
             Pair(WRITE.REPORTS.name(), WRITE.REPORTS),
             Pair(WRITE.STATUSES.name(), WRITE.STATUSES),
+
+            Pair(PROFILE.ALL.name(), PROFILE.ALL),
 
             Pair(PUSH.ALL.name(), PUSH.ALL),
 
