@@ -139,13 +139,13 @@ data class MediaAttachment(
              * Width of this media attachment.
              */
             @SerialName("width")
-            val width: Int,
+            val width: Int? = null,
 
             /**
              * Height of this media attachment.
              */
             @SerialName("height")
-            val height: Int,
+            val height: Int? = null,
 
             /**
              * Size of this media attachment.
