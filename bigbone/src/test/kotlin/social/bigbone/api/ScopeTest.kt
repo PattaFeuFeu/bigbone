@@ -10,7 +10,7 @@ class ScopeTest {
     @Test
     fun buildScope() {
         // when creating a scope
-        val scope = Scope(Scope.READ.ALL, Scope.WRITE.ACCOUNTS, Scope.PUSH.ALL, Scope.ADMIN.READ.ACCOUNTS)
+        val scope = Scope(Scope.READ.ALL, Scope.WRITE.ACCOUNTS, Scope.PROFILE.ALL, Scope.PUSH.ALL, Scope.ADMIN.READ.ACCOUNTS)
 
         // after splitting the resulting space-delimited scope string
         val scopeNames = scope.toString().split(" ")
@@ -18,6 +18,7 @@ class ScopeTest {
         // the list of individual scope strings should contain those corresponding to the original scopes
         scopeNames.contains(Scope.READ.ALL.name()) shouldBeEqualTo true
         scopeNames.contains(Scope.WRITE.ACCOUNTS.name()) shouldBeEqualTo true
+        scopeNames.contains(Scope.PROFILE.ALL.name()) shouldBeEqualTo true
         scopeNames.contains(Scope.PUSH.ALL.name()) shouldBeEqualTo true
         scopeNames.contains(Scope.ADMIN.READ.ACCOUNTS.name()) shouldBeEqualTo true
     }
