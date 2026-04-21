@@ -122,6 +122,11 @@ Dependencies:
 > If you previously declared the dependency using `social.bigbone`, please switch to `io.github.pattafeufeu`.
 > See explanation further up for why that is.
 
+> [!CAUTION]
+> SNAPSHOT builds are not currently available on Central. See [#684](https://github.com/PattaFeuFeu/bigbone/issues/684) for further information.
+> Until that issue is fixed, please check out this library and build locally. Sorry for the inconvenience!
+> We hope to get this resolved quickly.
+
 ```groovy
 dependencies {
     implementation "io.github.pattafeufeu:bigbone:2.0.0-SNAPSHOT"
@@ -149,6 +154,11 @@ Dependencies:
 > [!TIP]
 > If you previously declared the dependency using `social.bigbone`, please switch to `io.github.pattafeufeu`.
 > See explanation further up for why that is.
+
+> [!CAUTION]
+> SNAPSHOT builds are not currently available on Central. See [#684](https://github.com/PattaFeuFeu/bigbone/issues/684) for further information.
+> Until that issue is fixed, please check out this library and build locally. Sorry for the inconvenience!
+> We hope to get this resolved quickly.
 
 ```groovy
 dependencies {
@@ -185,6 +195,11 @@ Dependencies:
 > [!TIP]
 > If you previously declared the dependency using `social.bigbone`, please switch to `io.github.pattafeufeu`.
 > See explanation further up for why that is.
+
+> [!CAUTION]
+> SNAPSHOT builds are not currently available on Central. See [#684](https://github.com/PattaFeuFeu/bigbone/issues/684) for further information.
+> Until that issue is fixed, please check out this library and build locally. Sorry for the inconvenience!
+> We hope to get this resolved quickly.
 
 ```xml
 <dependency>
