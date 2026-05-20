@@ -57,6 +57,7 @@ import social.bigbone.api.method.OAuthMethods
 import social.bigbone.api.method.OEmbedMethods
 import social.bigbone.api.method.PollMethods
 import social.bigbone.api.method.PreferenceMethods
+import social.bigbone.api.method.ProfileMethods
 import social.bigbone.api.method.PushNotificationMethods
 import social.bigbone.api.method.ReportMethods
 import social.bigbone.api.method.ScheduledStatusMethods
@@ -382,6 +383,13 @@ class MastodonClient private constructor(
     @Suppress("unused") // public API
     @get:JvmName("preferences")
     val preferences: PreferenceMethods by lazy { PreferenceMethods(this) }
+
+    /**
+     * Access API methods under the "profile" endpoint.
+     */
+    @Suppress("unused") // public API
+    @get:JvmName("profile")
+    val profile: ProfileMethods by lazy { ProfileMethods(this) }
 
     /**
      * Access API methods under "push" endpoint.
