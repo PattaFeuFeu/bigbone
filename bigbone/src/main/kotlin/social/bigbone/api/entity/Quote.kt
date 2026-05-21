@@ -45,7 +45,7 @@ data class Quote(
         PENDING,
 
         /**
-         * The quote has been accepted and can be displayed. This is the only case where one of quotedStatus or quotedStatusId is non-null.
+         * The quote has been accepted and can be displayed. In this case quotedStatus or quotedStatusId will be non-null.
          */
         @SerialName("accepted")
         ACCEPTED,
@@ -72,6 +72,27 @@ data class Quote(
          * The quote has been approved, but cannot be displayed because the user is not authorized to see it.
          */
         @SerialName("unauthorized")
-        UNAUTHORIZED
+        UNAUTHORIZED,
+
+        /**
+         * The quote has been approved, but should not be displayed because the user has blocked the account being quoted.
+         * In this case quotedStatus or quotedStatusId will be non-null.
+         */
+        @SerialName("blocked_account")
+        BLOCKED_ACCOUNT,
+
+        /**
+         * The quote has been approved, but should not be displayed because the user has blocked the domain of the account being quoted.
+         * In this case quotedStatus or quotedStatusId will be non-null.
+         */
+        @SerialName("blocked_domain")
+        BLOCKED_DOMAIN,
+
+        /**
+         * The quote has been approved, but should not be displayed because the user has muted the account being quoted.
+         * In this case quotedStatus or quotedStatusId will be non-null.
+         */
+        @SerialName("muted_account")
+        MUTED_ACCOUNT
     }
 }
