@@ -1,0 +1,38 @@
+{
+  "id": "116222600881276277",
+  "display_name": "Documentation user",
+  "note": "I'm only here as an example for documentation",
+  "fields": [
+    {
+      "name": "pronouns",
+      "value": "it/its",
+      "verified_at": null
+    }
+  ],
+  "avatar": null,
+  "avatar_static": null,
+  "avatar_description": "",
+  "header": null,
+  "header_static": null,
+  "header_description": "",
+  "locked": false,
+  "bot": false,
+  "hide_collections": null,
+  "discoverable": true,
+  "indexable": true,
+  "show_media": true,
+  "show_media_replies": true,
+  "show_featured": true,
+  "attribution_domains": [
+    "articles.example.com"
+  ],
+  "featured_tags": [
+    {
+      "id": "1",
+      "name": "foo",
+      "url": "https://example.com/@darrel_metz0/tagged/foo",
+      "statuses_count": "0",
+      "last_status_at": null
+    }
+  ]
+}
