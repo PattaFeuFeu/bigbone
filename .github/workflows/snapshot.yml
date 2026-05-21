@@ -87,7 +87,7 @@ jobs:
           echo "zipArchive=$archiveName" >> $GITHUB_OUTPUT
 
       - name: Create GitHub pre-release
-        uses: actions/create-release@v1 # todo: replace with something that is still maintained, e.g. softprops/action-gh-release
+        uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda # v3.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
