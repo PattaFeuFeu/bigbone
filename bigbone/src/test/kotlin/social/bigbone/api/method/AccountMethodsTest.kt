@@ -201,10 +201,11 @@ class AccountMethodsTest {
         val client = MockClient.mock("accounts_update_credentials_success.json")
         val accountMethods = AccountMethods(client)
         val profileFields = ProfileFields(
-            first = ProfileFieldName("Location") to ProfileFieldValue("Amsterdam, NL 🇳🇱"),
-            second = ProfileFieldName("Pronouns") to ProfileFieldValue("he/they"),
-            third = ProfileFieldName("Website") to ProfileFieldValue("https://example.com"),
-            fourth = null
+            mapOf(
+                ProfileFieldName("Location") to ProfileFieldValue("Amsterdam, NL 🇳🇱"),
+                ProfileFieldName("Pronouns") to ProfileFieldValue("he/they"),
+                ProfileFieldName("Website") to ProfileFieldValue("https://example.com")
+            )
         )
 
         accountMethods.updateCredentials(
