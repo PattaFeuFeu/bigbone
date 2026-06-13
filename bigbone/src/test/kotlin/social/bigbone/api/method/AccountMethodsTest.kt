@@ -216,7 +216,8 @@ class AccountMethodsTest {
             profileFields = profileFields,
             defaultPostVisibility = null,
             defaultSensitiveMark = null,
-            defaultLanguage = null
+            defaultLanguage = null,
+            attributionDomains = null
         ).execute()
 
         val parametersCapturingSlot = slot<Parameters>()
@@ -301,7 +302,8 @@ class AccountMethodsTest {
             profileFields = null,
             defaultPostVisibility = Visibility.UNLISTED,
             defaultSensitiveMark = true,
-            defaultLanguage = "EN"
+            defaultLanguage = "EN",
+            attributionDomains = listOf("example.com", "test.com")
         ).execute()
 
         with(account) {
@@ -328,7 +330,9 @@ class AccountMethodsTest {
                 "&indexable=true" +
                 "&source[privacy]=unlisted" +
                 "&source[sensitive]=true" +
-                "&source[language]=EN"
+                "&source[language]=EN" +
+                "&attribution_domains[]=example.com" +
+                "&attribution_domains[]=test.com"
         }
     }
 
@@ -351,7 +355,8 @@ class AccountMethodsTest {
                 profileFields = null,
                 defaultPostVisibility = null,
                 defaultSensitiveMark = null,
-                defaultLanguage = null
+                defaultLanguage = null,
+                attributionDomains = null
             ).execute()
         } shouldThrow BigBoneRequestException::class
     }
