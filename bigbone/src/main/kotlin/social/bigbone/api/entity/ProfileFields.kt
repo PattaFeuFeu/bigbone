@@ -5,28 +5,29 @@ import social.bigbone.Parameters
 /**
  * Profile fields that can be set in [social.bigbone.api.method.AccountMethods.updateCredentials].
  *
- * At most four fields are allowed.
+ * By default, at most four fields are allowed. Limit may be overridden by the instance.
+ * todo: Link to max_profile_fields once available
+ * Check [Instance.Configuration.accounts] for limits.
  *
  * By default, each of them has a max key and value length of 255 characters.
  * See [ProfileFieldName] and [ProfileFieldValue] for further information.
  */
-data class ProfileFields(
-    val first: Pair<ProfileFieldName, ProfileFieldValue>? = null,
-    val second: Pair<ProfileFieldName, ProfileFieldValue>? = null,
-    val third: Pair<ProfileFieldName, ProfileFieldValue>? = null,
-    val fourth: Pair<ProfileFieldName, ProfileFieldValue>? = null
+@JvmInline
+value class ProfileFields(
+    val fields: Map<ProfileFieldName, ProfileFieldValue>? = null
 ) {
     fun toParameters(parameters: Parameters = Parameters()): Parameters {
+        if (fields.isNullOrEmpty()) return parameters
+
         fun appendField(index: Int, name: ProfileFieldName, value: ProfileFieldValue) {
             parameters.append("fields_attributes[$index][name]", name.name)
             parameters.append("fields_attributes[$index][value]", value.value)
         }
 
         return parameters.apply {
-            first?.let { (name, value) -> appendField(0, name, value) }
-            second?.let { (name, value) -> appendField(1, name, value) }
-            third?.let { (name, value) -> appendField(2, name, value) }
-            fourth?.let { (name, value) -> appendField(3, name, value) }
+            fields.onEachIndexed { index, (name, value) ->
+                appendField(index, name, value)
+            }
         }
     }
 }
