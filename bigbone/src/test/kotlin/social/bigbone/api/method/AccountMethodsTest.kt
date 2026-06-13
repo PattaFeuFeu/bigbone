@@ -13,6 +13,7 @@ import org.amshove.kluent.withMessage
 import org.junit.jupiter.api.Test
 import social.bigbone.Parameters
 import social.bigbone.PrecisionDateTime.ValidPrecisionDateTime.ExactTime
+import social.bigbone.api.entity.QuotePolicy
 import social.bigbone.api.entity.data.Visibility
 import social.bigbone.api.exception.BigBoneRequestException
 import social.bigbone.testtool.MockClient
@@ -217,6 +218,7 @@ class AccountMethodsTest {
             defaultPostVisibility = null,
             defaultSensitiveMark = null,
             defaultLanguage = null,
+            defaultQuotePolicy = null,
             attributionDomains = null
         ).execute()
 
@@ -303,6 +305,7 @@ class AccountMethodsTest {
             defaultPostVisibility = Visibility.UNLISTED,
             defaultSensitiveMark = true,
             defaultLanguage = "EN",
+            defaultQuotePolicy = QuotePolicy.FOLLOWERS,
             attributionDomains = listOf("example.com", "test.com")
         ).execute()
 
@@ -331,6 +334,7 @@ class AccountMethodsTest {
                 "&source[privacy]=unlisted" +
                 "&source[sensitive]=true" +
                 "&source[language]=EN" +
+                "&source[quote_policy]=followers" +
                 "&attribution_domains[]=example.com" +
                 "&attribution_domains[]=test.com"
         }
@@ -356,6 +360,7 @@ class AccountMethodsTest {
                 defaultPostVisibility = null,
                 defaultSensitiveMark = null,
                 defaultLanguage = null,
+                defaultQuotePolicy = null,
                 attributionDomains = null
             ).execute()
         } shouldThrow BigBoneRequestException::class
