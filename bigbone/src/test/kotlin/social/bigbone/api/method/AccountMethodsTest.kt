@@ -244,52 +244,6 @@ class AccountMethodsTest {
     }
 
     @Test
-    fun `Given string with more than 255 characters, when creating ProfileFieldName, then fail with exception`() {
-        val tooLongProfileFieldName = "abcdefghijklmnopqrstuvwxyz" +
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-            "abcdefghijklmnopqrstuvwxyz" +
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-            "0123456789" +
-            "abcdefghijklmnopqrstuvwxyz" +
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-            "01234567890123456789" +
-            "01234567890" +
-            "abcdefghijklmnopqrstuvwxyz" +
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-            "toomanycharacters"
-
-        invoking { ProfileFieldName(tooLongProfileFieldName) }
-            .shouldThrow(IllegalArgumentException::class)
-            .withMessage(
-                "Name of profile field must not be longer than 255 characters but was: " +
-                    "$tooLongProfileFieldName (${tooLongProfileFieldName.length} characters)."
-            )
-    }
-
-    @Test
-    fun `Given string with more than 255 characters, when creating ProfileFieldValue, then fail with exception`() {
-        val tooLongProfileFieldValue = "abcdefghijklmnopqrstuvwxyz" +
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-            "abcdefghijklmnopqrstuvwxyz" +
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-            "0123456789" +
-            "abcdefghijklmnopqrstuvwxyz" +
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-            "01234567890123456789" +
-            "01234567890" +
-            "abcdefghijklmnopqrstuvwxyz" +
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-            "toomanycharacters"
-
-        invoking { ProfileFieldValue(tooLongProfileFieldValue) }
-            .shouldThrow(IllegalArgumentException::class)
-            .withMessage(
-                "Value of profile field must not be longer than 255 characters but was: " +
-                    "$tooLongProfileFieldValue (${tooLongProfileFieldValue.length} characters)."
-            )
-    }
-
-    @Test
     fun updateCredentials() {
         val client = MockClient.mock("accounts_update_credentials_success.json")
         val accountMethods = AccountMethods(client)

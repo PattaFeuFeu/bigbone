@@ -5,7 +5,10 @@ import social.bigbone.Parameters
 /**
  * Profile fields that can be set in [social.bigbone.api.method.AccountMethods.updateCredentials].
  *
- * At most four fields are allowed. Each of them has a max key and value length of 255 characters.
+ * At most four fields are allowed.
+ *
+ * By default, each of them has a max key and value length of 255 characters.
+ * See [ProfileFieldName] and [ProfileFieldValue] for further information.
  */
 data class ProfileFields(
     val first: Pair<ProfileFieldName, ProfileFieldValue>? = null,
@@ -30,26 +33,18 @@ data class ProfileFields(
 
 /**
  * Value of a profile field used in [ProfileFields].
- * Must not be longer than 255 characters.
+ *
+ * By default, max length of 255 characters, but may be overridden by the instance.
+ * todo: Link to profile_field_name_limit once available
+ * Check [Instance.Configuration.accounts] for limits.
  */
 @JvmInline
-value class ProfileFieldValue(val value: String) {
-    init {
-        require(value.length <= 255) {
-            "Value of profile field must not be longer than 255 characters but was: $value (${value.length} characters)."
-        }
-    }
-}
+value class ProfileFieldValue(val value: String)
 
 /**
  * Name of a profile field used in [ProfileFields].
- * Must not be longer than 255 characters.
+ * todo: Link to profile_field_value_limit once available
+ * Check [Instance.Configuration.accounts] for limits.
  */
 @JvmInline
-value class ProfileFieldName(val name: String) {
-    init {
-        require(name.length <= 255) {
-            "Name of profile field must not be longer than 255 characters but was: $name (${name.length} characters)."
-        }
-    }
-}
+value class ProfileFieldName(val name: String)
