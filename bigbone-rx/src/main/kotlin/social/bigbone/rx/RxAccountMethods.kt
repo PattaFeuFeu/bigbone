@@ -10,6 +10,7 @@ import social.bigbone.api.entity.FamiliarFollowers
 import social.bigbone.api.entity.FeaturedTag
 import social.bigbone.api.entity.Instance
 import social.bigbone.api.entity.MastodonList
+import social.bigbone.api.entity.QuotePolicy
 import social.bigbone.api.entity.Relationship
 import social.bigbone.api.entity.Status
 import social.bigbone.api.entity.Token
@@ -90,6 +91,7 @@ class RxAccountMethods(client: MastodonClient) {
      * @param defaultPostVisibility Default post privacy for authored statuses
      * @param defaultSensitiveMark Whether to mark authored statuses as sensitive by default
      * @param defaultLanguage Default language to use for authored statuses (ISO 6391)
+     * @param defaultQuotePolicy Default quote policy for new posts
      * @param attributionDomains Domains of websites allowed to credit the account. Maximum of 10 domains.
      *
      * @see <a href="https://docs.joinmastodon.org/methods/accounts/#update_credentials">Mastodon API documentation: methods/accounts/#update_credentials</a>
@@ -108,6 +110,7 @@ class RxAccountMethods(client: MastodonClient) {
         defaultPostVisibility: Visibility?,
         defaultSensitiveMark: Boolean?,
         defaultLanguage: String?,
+        defaultQuotePolicy: QuotePolicy?,
         attributionDomains: List<String>?
     ): Single<CredentialAccount> = Single.fromCallable {
         accountMethods.updateCredentials(
@@ -124,6 +127,7 @@ class RxAccountMethods(client: MastodonClient) {
             defaultPostVisibility = defaultPostVisibility,
             defaultSensitiveMark = defaultSensitiveMark,
             defaultLanguage = defaultLanguage,
+            defaultQuotePolicy = defaultQuotePolicy,
             attributionDomains = attributionDomains
         ).execute()
     }
