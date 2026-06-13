@@ -10,6 +10,7 @@ import social.bigbone.api.entity.FamiliarFollowers
 import social.bigbone.api.entity.FeaturedTag
 import social.bigbone.api.entity.Instance
 import social.bigbone.api.entity.MastodonList
+import social.bigbone.api.entity.ProfileFields
 import social.bigbone.api.entity.QuotePolicy
 import social.bigbone.api.entity.Relationship
 import social.bigbone.api.entity.Status
@@ -106,7 +107,7 @@ class RxAccountMethods(client: MastodonClient) {
         discoverable: Boolean?,
         hideCollections: Boolean?,
         indexable: Boolean?,
-        profileFields: AccountMethods.ProfileFields?,
+        profileFields: ProfileFields?,
         defaultPostVisibility: Visibility?,
         defaultSensitiveMark: Boolean?,
         defaultLanguage: String?,

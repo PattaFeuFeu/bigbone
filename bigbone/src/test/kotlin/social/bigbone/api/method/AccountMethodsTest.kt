@@ -13,6 +13,9 @@ import org.amshove.kluent.withMessage
 import org.junit.jupiter.api.Test
 import social.bigbone.Parameters
 import social.bigbone.PrecisionDateTime.ValidPrecisionDateTime.ExactTime
+import social.bigbone.api.entity.ProfileFieldName
+import social.bigbone.api.entity.ProfileFieldValue
+import social.bigbone.api.entity.ProfileFields
 import social.bigbone.api.entity.QuotePolicy
 import social.bigbone.api.entity.data.Visibility
 import social.bigbone.api.exception.BigBoneRequestException
@@ -197,10 +200,10 @@ class AccountMethodsTest {
     fun `Given client returning success, when updating credentials with valid profile fields, then ensure correct endpoint parameters`() {
         val client = MockClient.mock("accounts_update_credentials_success.json")
         val accountMethods = AccountMethods(client)
-        val profileFields = AccountMethods.ProfileFields(
-            first = AccountMethods.ProfileFieldName("Location") to AccountMethods.ProfileFieldValue("Amsterdam, NL 🇳🇱"),
-            second = AccountMethods.ProfileFieldName("Pronouns") to AccountMethods.ProfileFieldValue("he/they"),
-            third = AccountMethods.ProfileFieldName("Website") to AccountMethods.ProfileFieldValue("https://example.com"),
+        val profileFields = ProfileFields(
+            first = ProfileFieldName("Location") to ProfileFieldValue("Amsterdam, NL 🇳🇱"),
+            second = ProfileFieldName("Pronouns") to ProfileFieldValue("he/they"),
+            third = ProfileFieldName("Website") to ProfileFieldValue("https://example.com"),
             fourth = null
         )
 
@@ -255,7 +258,7 @@ class AccountMethodsTest {
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
             "toomanycharacters"
 
-        invoking { AccountMethods.ProfileFieldName(tooLongProfileFieldName) }
+        invoking { ProfileFieldName(tooLongProfileFieldName) }
             .shouldThrow(IllegalArgumentException::class)
             .withMessage(
                 "Name of profile field must not be longer than 255 characters but was: " +
@@ -278,7 +281,7 @@ class AccountMethodsTest {
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
             "toomanycharacters"
 
-        invoking { AccountMethods.ProfileFieldValue(tooLongProfileFieldValue) }
+        invoking { ProfileFieldValue(tooLongProfileFieldValue) }
             .shouldThrow(IllegalArgumentException::class)
             .withMessage(
                 "Value of profile field must not be longer than 255 characters but was: " +
