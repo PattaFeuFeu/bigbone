@@ -1,12 +1,11 @@
 package social.bigbone.api.method
 
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
 import social.bigbone.JSON_SERIALIZER
 import social.bigbone.MastodonClient
 import social.bigbone.MastodonClient.Method
 import social.bigbone.MastodonRequest
+import social.bigbone.addFileToFormBody
 import social.bigbone.api.entity.FileAsMediaAttachment
 import social.bigbone.api.entity.MediaAttachment
 import social.bigbone.api.entity.data.Focus
@@ -50,25 +49,15 @@ class MediaMethods(private val client: MastodonClient) {
         focus: Focus? = null,
         customThumbnail: FileAsMediaAttachment? = null
     ): MastodonRequest<MediaAttachment> {
-        val requestBodyBuilder: MultipartBody.Builder = MultipartBody.Builder().setType(MultipartBody.FORM)
+        val requestBodyBuilder: MultipartBody.Builder = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .apply {
+                addFileToFormBody(file = mediaAttachment, formDataName = "file", builder = this)
+                addFileToFormBody(file = customThumbnail, formDataName = "thumbnail", builder = this)
 
-        val (file, mediaType) = mediaAttachment
-        val body = file.asRequestBody(mediaType.toMediaTypeOrNull())
-        val part = MultipartBody.Part.createFormData("file", file.name, body)
-        requestBodyBuilder.addPart(part)
-
-        if (customThumbnail != null) {
-            val (thumbnailFile, thumbnailMediaType) = customThumbnail
-            val thumbnailPart: MultipartBody.Part = MultipartBody.Part.createFormData(
-                name = "thumbnail",
-                filename = thumbnailFile.name,
-                body = thumbnailFile.asRequestBody(thumbnailMediaType.toMediaTypeOrNull())
-            )
-            requestBodyBuilder.addPart(thumbnailPart)
-        }
-
-        description?.let { requestBodyBuilder.addFormDataPart("description", description) }
-        focus?.let { requestBodyBuilder.addFormDataPart("focus", focus.toString()) }
+                description?.let { addFormDataPart("description", description) }
+                focus?.let { addFormDataPart("focus", focus.toString()) }
+            }
 
         return MastodonRequest(
             executor = { client.postRequestBody(path = endpointV2, body = requestBodyBuilder.build()) },
@@ -108,20 +97,14 @@ class MediaMethods(private val client: MastodonClient) {
         description: String? = null,
         focus: Focus? = null
     ): MastodonRequest<MediaAttachment> {
-        val requestBodyBuilder: MultipartBody.Builder = MultipartBody.Builder().setType(MultipartBody.FORM)
+        val requestBodyBuilder: MultipartBody.Builder = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .apply {
+                addFileToFormBody(file = customThumbnail, formDataName = "thumbnail", builder = this)
 
-        if (customThumbnail != null) {
-            val (file, mediaType) = customThumbnail
-            val part = MultipartBody.Part.createFormData(
-                name = "thumbnail",
-                filename = file.name,
-                body = file.asRequestBody(mediaType.toMediaTypeOrNull())
-            )
-            requestBodyBuilder.addPart(part)
-        }
-
-        description?.let { requestBodyBuilder.addFormDataPart("description", description) }
-        focus?.let { requestBodyBuilder.addFormDataPart("focus", focus.toString()) }
+                description?.let { addFormDataPart("description", description) }
+                focus?.let { addFormDataPart("focus", focus.toString()) }
+            }
 
         return MastodonRequest(
             executor = { client.putRequestBody(path = "$endpointV1/$withId", body = requestBodyBuilder.build()) },
@@ -155,24 +138,15 @@ class MediaMethods(private val client: MastodonClient) {
         focus: Focus? = null,
         customThumbnail: FileAsMediaAttachment? = null
     ): MastodonRequest<MediaAttachment> {
-        val requestBodyBuilder: MultipartBody.Builder = MultipartBody.Builder().setType(MultipartBody.FORM)
+        val requestBodyBuilder: MultipartBody.Builder = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .apply {
+                addFileToFormBody(file = FileAsMediaAttachment(file, mediaType), formDataName = "file", builder = this)
+                addFileToFormBody(file = customThumbnail, formDataName = "thumbnail", builder = this)
 
-        val body = file.asRequestBody(mediaType.toMediaTypeOrNull())
-        val part = MultipartBody.Part.createFormData("file", file.name, body)
-        requestBodyBuilder.addPart(part)
-
-        if (customThumbnail != null) {
-            val (thumbnailFile, thumbnailMediaType) = customThumbnail
-            val thumbnailPart: MultipartBody.Part = MultipartBody.Part.createFormData(
-                name = "thumbnail",
-                filename = thumbnailFile.name,
-                body = thumbnailFile.asRequestBody(thumbnailMediaType.toMediaTypeOrNull())
-            )
-            requestBodyBuilder.addPart(thumbnailPart)
-        }
-
-        description?.let { requestBodyBuilder.addFormDataPart("description", description) }
-        focus?.let { requestBodyBuilder.addFormDataPart("focus", focus.toString()) }
+                description?.let { addFormDataPart("description", description) }
+                focus?.let { addFormDataPart("focus", focus.toString()) }
+            }
 
         return MastodonRequest(
             executor = { client.postRequestBody(path = endpointV1, body = requestBodyBuilder.build()) },
