@@ -7,6 +7,7 @@ import social.bigbone.JSON_SERIALIZER
 import social.bigbone.MastodonClient
 import social.bigbone.MastodonClient.Method
 import social.bigbone.MastodonRequest
+import social.bigbone.api.entity.FileAsMediaAttachment
 import social.bigbone.api.entity.MediaAttachment
 import social.bigbone.api.entity.data.Focus
 import java.io.File
@@ -144,7 +145,7 @@ class MediaMethods(private val client: MastodonClient) {
         message = "Use async variant which returns after upload but before media attachment has been processed.",
         replaceWith = ReplaceWith(
             "uploadMediaAsync(FileAsMediaAttachment(file, mediaType), description, focus, customThumbnail)",
-            "social.bigbone.api.method.FileAsMediaAttachment"
+            "social.bigbone.api.entity.FileAsMediaAttachment"
         )
     )
     fun uploadMedia(
@@ -179,14 +180,3 @@ class MediaMethods(private val client: MastodonClient) {
         )
     }
 }
-
-/**
- * Wrapper that can be used to upload a [MediaAttachment].
- *
- * @property file [File] representation of the media attachment that should be used when uploading.
- * @property mediaType [String] representation of [file]’s media type. Defaults to image/jpeg.
- */
-data class FileAsMediaAttachment(
-    val file: File,
-    val mediaType: String = "image/jpeg"
-)
