@@ -1,0 +1,30 @@
+changelog:
+  categories:
+    - title: 🎉 New features
+      labels:
+        - "feature"
+
+    - title: 🔧 Improvements
+      labels:
+        - "enhancement"
+
+    - title: 🐛 Bug fixes
+      labels:
+        - "bug"
+
+    - title: 👩‍💻 Refactoring
+      labels:
+        - "code quality"
+
+    - title: 📚 Dependency updates
+      labels:
+        - "dependencies"
+        - "github_actions"
+
+    - title: ✍️ Documentation
+      labels:
+        - "documentation"
+
+    - title: Other Changes
+      labels:
+        - "*"
