@@ -3,7 +3,6 @@
 ![Build](https://github.com/pattafeufeu/bigbone/actions/workflows/build.yml/badge.svg)
 [![codecov](https://codecov.io/gh/andregasser/bigbone/branch/master/graph/badge.svg?token=3AFHQQH547)](https://codecov.io/gh/andregasser/bigbone)
 ![Latest version on Maven Central](https://img.shields.io/maven-central/v/io.github.pattafeufeu/bigbone)
-[![Slack](https://img.shields.io/badge/Slack-Join%20the%20discussion-brightgreen?logo=slack&color=%2344BDDF)](https://bigboneworkspace.slack.com/)
 
 **BigBone** is a [Mastodon](https://docs.joinmastodon.org/) client library for Java and Kotlin.
 
