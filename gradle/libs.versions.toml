@@ -11,7 +11,7 @@ kotlin = "2.3.21"
 kotlin-coroutines = "1.11.0"
 kotlinx-serialization-json = "1.11.0"
 mockk = "1.14.11"
-okhttp = "5.3.2"
+okhttp = "5.4.0"
 rxjava = "3.1.12"
 
 # Gradle plugins
