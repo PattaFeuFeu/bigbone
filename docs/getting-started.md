@@ -28,87 +28,65 @@ in how you need to declare the dependency (previously `social.bigbone`, now `io.
 
 ### Gradle (Groovy DSL)
 
-Instructions for adding BigBone `2.0.0-SNAPSHOT` to your Gradle project (using Groovy DSL):
+Instructions for adding BigBone to your Gradle project (using Groovy DSL):
 
-Repository:
+**Repository**:
 
 ```groovy
 repositories {
-    maven {
-        url "https://central.sonatype.com/repository/maven-snapshots/"
-    }
+    mavenCentral()
 }
 ```
 
-Dependencies:
+**Dependencies**:
 
 ```groovy
 dependencies {
-    implementation "io.github.pattafeufeu:bigbone:2.0.0-SNAPSHOT"
+    implementation "io.github.pattafeufeu:bigbone:2.0.0"
     // Optional, if you want to use the BigBone RxJava3 wrappers
-    implementation "io.github.pattafeufeu:bigbone-rx:2.0.0-SNAPSHOT"
+    implementation "io.github.pattafeufeu:bigbone-rx:2.0.0"
 }
 ```
 
 ### Gradle (Kotlin DSL)
 
-Instructions for adding BigBone `2.0.0-SNAPSHOT` to your Gradle project (using Kotlin DSL):
+Instructions for adding BigBone to your Gradle project (using Kotlin DSL):
 
-Repository:
+**Repository**:
 
-```groovy
+```kotlin
 repositories {
-    maven {
-        url = uri("https://central.sonatype.com/repository/maven-snapshots/")
-    }
+    mavenCentral()
 }
 ```
 
-Dependencies:
+**Dependencies**:
 
-```groovy
+```kotlin
 dependencies {
-    implementation("io.github.pattafeufeu:bigbone:2.0.0-SNAPSHOT")
+    implementation("io.github.pattafeufeu:bigbone:2.0.0")
     // Optional, if you want to use the BigBone RxJava3 wrappers
-    implementation("io.github.pattafeufeu:bigbone-rx:2.0.0-SNAPSHOT")
+    implementation("io.github.pattafeufeu:bigbone-rx:2.0.0")
 }
 ```
 
 ### Maven
 
-Instructions for adding BigBone `2.0.0-SNAPSHOT` to your Maven project:
+Instructions for adding BigBone to your Maven project:
 
-Repository:
-
-```xml
-<repositories>
-    <repository>
-        <id>maven-central-snapshots</id>
-        <name>Maven Central Snapshot Repository</name>
-        <url>https://central.sonatype.com/repository/maven-snapshots/</url>
-        <releases>
-            <enabled>false</enabled>
-        </releases>
-        <snapshots>
-            <enabled>true</enabled>
-        </snapshots>
-    </repository>
-</repositories>
-```
-
-Dependencies:
+**Dependencies**:
 
 ```xml
 <dependency>
     <groupId>io.github.pattafeufeu</groupId>
     <artifactId>bigbone</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>2.0.0</version>
 </dependency>
 
         <!-- Optional, if you want to use the BigBone RxJava3 wrappers -->
 <dependency>
 <groupId>io.github.pattafeufeu</groupId>
     <artifactId>bigbone-rx</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
+<version>2.0.0</version>
 </dependency>
 ```

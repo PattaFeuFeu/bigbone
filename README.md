@@ -7,6 +7,7 @@
 **BigBone** is a [Mastodon](https://docs.joinmastodon.org/) client library for Java and Kotlin.
 
 # Table of Contents
+
 * [Why BigBone](#why-bigbone)
 * [Project Team](#project-team)
 * [Core Functionality](#core-functionality)
@@ -26,13 +27,13 @@
 # Why BigBone
 
 BigBone is a fork of [Mastodon4J](https://github.com/sys1yagi/mastodon4j), a Mastodon client library for Java and Kotlin
-that was published by Toshihiro Yagi. The goal of Mastodon4J was to provide an easy-to-use library for interacting with 
-the [Mastodon social media network](https://joinmastodon.org/) from Java and Kotlin code. Unfortunately, it became 
-abandoned and has not seen any updates since 2018. 
+that was published by Toshihiro Yagi. The goal of Mastodon4J was to provide an easy-to-use library for interacting with
+the [Mastodon social media network](https://joinmastodon.org/) from Java and Kotlin code. Unfortunately, it became
+abandoned and has not seen any updates since 2018.
 
-Since Elon Musk's Twitter acquisition in 2022, Mastodon has gained tremendous popularity. A project that is so well 
-received by the community deserves to have up-to-date and maintained client libraries. Because of this, we brought the 
-Mastodon4J project back to life in November 2022. That's when this project, the BigBone client library for Java and 
+Since Elon Musk's Twitter acquisition in 2022, Mastodon has gained tremendous popularity. A project that is so well
+received by the community deserves to have up-to-date and maintained client libraries. Because of this, we brought the
+Mastodon4J project back to life in November 2022. That's when this project, the BigBone client library for Java and
 the BigBone client library for Java and Kotlin, was born.
 
 The name **BigBone** mostly has symbolic character. We opted for it as a nod to the awe-inspiring Mastodons of the Pleistocene era,
@@ -48,12 +49,13 @@ The project is currently taken care of by the following people:
 - [Andreas Bartels](https://github.com/bocops)
 - [Patrick Geselbracht](https://github.com/PattaFeuFeu)
 
-A big "Thank you" to everyone for the time they invest in this project. Without your help we would not be where we are 
-right now. 
+A big “Thank you” to everyone for the time they invest in this project. Without your help we would not be where we are
+right now.
 
 # Core Functionality
 
 With a library like BigBone, you can build tools that allow you to
+
 - act on statuses on your timelines (home, local, federated).
 - post new statuses or edit existing ones (including media uploads)
 - favourite and bookmark statuses
@@ -68,12 +70,11 @@ With a library like BigBone, you can build tools that allow you to
 
 # Implementation Status
 
-**We did not release an official version on Maven Central yet**, but there's a `2.0.0-SNAPSHOT` which you can use to 
-play around / experiment with. Just please be aware that with every new snapshot version, there can be breaking changes 
-along the lines. There will be "darker places" in the library, where stuff will not work as expected. If you find 
-issues, please [file an issue](https://github.com/pattafeufeu/bigbone/issues).  
+In July 2026, we finally released an official version on Maven Central, but we’re by no means feature-complete.
+There will be "darker places" in the library, where stuff will not work as expected. If you find
+issues, please [file an issue](https://github.com/pattafeufeu/bigbone/issues).
 
-BigBone does not yet implement the full API of Mastodon. Actually, there is still **a lot to do**. For details on the 
+BigBone does not yet implement the full API of Mastodon. Actually, there is still **a lot to do**. For details on the
 current API coverage please check out our [API Coverage](https://bigbone.social/api-coverage/) page.
 
 # Versioning
@@ -100,124 +101,86 @@ the [`bigbone-rx` README](bigbone-rx/README.md).
 > For that reason, we’re already switching to a GitHub-namespace-based mode now which unfortunately leads to a change
 > in how you need to declare the dependency (previously `social.bigbone`, now `io.github.pattafeufeu`).
 
-
 ## Gradle (Groovy DSL)
 
-Instructions for adding BigBone `2.0.0-SNAPSHOT` to your Gradle project (using Groovy DSL):
+Instructions for adding BigBone to your Gradle project (using Groovy DSL):
 
-Repository:
+**Repository**:
 
 ```groovy
 repositories {
-    maven {
-      url "https://central.sonatype.com/repository/maven-snapshots/"
-    }
+  mavenCentral()
 }
 ```
 
-Dependencies:
+**Dependencies**:
 
 > [!TIP]
 > If you previously declared the dependency using `social.bigbone`, please switch to `io.github.pattafeufeu`.
 > See explanation further up for why that is.
 
-> [!CAUTION]
-> SNAPSHOT builds are not currently available on Central. See [#684](https://github.com/PattaFeuFeu/bigbone/issues/684) for further information.
-> Until that issue is fixed, please check out this library and build locally. Sorry for the inconvenience!
-> We hope to get this resolved quickly.
-
 ```groovy
 dependencies {
-    implementation "io.github.pattafeufeu:bigbone:2.0.0-SNAPSHOT"
+  implementation "io.github.pattafeufeu:bigbone:$LATEST_VERSION"
     // Optional, if you want to use the BigBone RxJava3 wrappers
-    implementation "io.github.pattafeufeu:bigbone-rx:2.0.0-SNAPSHOT"
+  implementation "io.github.pattafeufeu:bigbone-rx:$LATEST_VERSION"
 }
 ```
 
 ## Gradle (Kotlin DSL)
 
-Instructions for adding BigBone `2.0.0-SNAPSHOT` to your Gradle project (using Kotlin DSL):
+Instructions for adding BigBone to your Gradle project (using Kotlin DSL):
 
-Repository:
+**Repository**:
 
-```groovy
+```kotlin
 repositories {
-    maven {
-      url = uri("https://central.sonatype.com/repository/maven-snapshots/")
-    }
+  mavenCentral()
 }
 ```
 
-Dependencies:
+**Dependencies**:
 
 > [!TIP]
 > If you previously declared the dependency using `social.bigbone`, please switch to `io.github.pattafeufeu`.
 > See explanation further up for why that is.
 
-> [!CAUTION]
-> SNAPSHOT builds are not currently available on Central. See [#684](https://github.com/PattaFeuFeu/bigbone/issues/684) for further information.
-> Until that issue is fixed, please check out this library and build locally. Sorry for the inconvenience!
-> We hope to get this resolved quickly.
-
-```groovy
+```kotlin
 dependencies {
-    implementation("io.github.pattafeufeu:bigbone:2.0.0-SNAPSHOT")
+  implementation("io.github.pattafeufeu:bigbone:$LATEST_VERSION")
     // Optional, if you want to use the BigBone RxJava3 wrappers
-    implementation("io.github.pattafeufeu:bigbone-rx:2.0.0-SNAPSHOT")
+  implementation("io.github.pattafeufeu:bigbone-rx:$LATEST_VERSION")
 }
 ```
 
 ## Maven
 
-Instructions for adding BigBone `2.0.0-SNAPSHOT` to your Maven project:
-
-Repository:
-
-```xml
-<repositories>
-    <repository>
-        <id>maven-central-snapshots</id>
-        <name>Maven Central Snapshot Repository</name>
-      <url>https://central.sonatype.com/repository/maven-snapshots/</url>
-        <releases>
-            <enabled>false</enabled>
-        </releases>
-        <snapshots>
-            <enabled>true</enabled>
-        </snapshots>
-    </repository>
-</repositories>
-```
-
-Dependencies:
+**Dependencies**:
 
 > [!TIP]
 > If you previously declared the dependency using `social.bigbone`, please switch to `io.github.pattafeufeu`.
 > See explanation further up for why that is.
 
-> [!CAUTION]
-> SNAPSHOT builds are not currently available on Central. See [#684](https://github.com/PattaFeuFeu/bigbone/issues/684) for further information.
-> Until that issue is fixed, please check out this library and build locally. Sorry for the inconvenience!
-> We hope to get this resolved quickly.
-
 ```xml
 <dependency>
     <groupId>io.github.pattafeufeu</groupId>
     <artifactId>bigbone</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
+  <version>2.0.0</version>
 </dependency>
+```
 
-        <!-- Optional, if you want to use the BigBone RxJava3 wrappers -->
+```xml
+<!-- Optional, if you want to use the BigBone RxJava3 wrappers -->
 <dependency>
     <groupId>io.github.pattafeufeu</groupId>
     <artifactId>bigbone-rx</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
+  <version>2.0.0</version>
 </dependency>
 ```
 
 # Using BigBone
 
-For an easy introduction to using the library, we recommended that you take a look at the `sample-*` modules of this 
+For an easy introduction to using the library, we recommended that you take a look at the `sample-*` modules of this
 project. These modules provide examples for Java and Kotlin:
 
 - `sample-java` for Java example code
@@ -238,8 +201,8 @@ Please check out [SECURITY.md](SECURITY.md) for more details on how we handle se
 
 # Troubleshooting
 
-In this section we describe problems that have been reported to us by users of the library. Please 
-read this section before you start working with it, as the tips given in this section might 
+In this section we describe problems that have been reported to us by users of the library. Please
+read this section before you start working with it, as the tips given in this section might
 save you some time.
 
 ## Request Not Sent / No Data Returned
@@ -256,13 +219,15 @@ The same applies if you're using BigBone in a Java project.
 ## Android Studio: BigBone Classes Not Found
 
 An Android Studio user reported, that he was not able to use BigBone library in Android Studio, as classes were not
-recognized by the IDE (marked red instead). In this particular case, the fix was to switch/update to Android Studio Giraffe.
+recognized by the IDE (marked red instead). In this particular case, the fix was to switch/update to Android Studio
+Giraffe.
 See this issue for more details: https://github.com/pattafeufeu/bigbone/issues/280
 
 # Contribution
 
-Contributions are welcome! There's always something to be done and we try to keep an up-to-date list of issues that can be 
-worked on. Please have a look at our [Code Contribution Guidelines](CONTRIBUTING.md) for more details.  
+Contributions are welcome! There's always something to be done, and we try to keep an up-to-date list of issues that can
+be worked on.
+Please have a look at our [Code Contribution Guidelines](CONTRIBUTING.md) for more details.
 
 # Projects Using BigBone
 
