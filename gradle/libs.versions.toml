@@ -1,6 +1,6 @@
 [versions]
 # This project version
-bigbone = "2.0.0-SNAPSHOT"
+bigbone = "2.0.0"
 
 # 3rd party dependencies
 junit-jupiter = "6.1.0"
