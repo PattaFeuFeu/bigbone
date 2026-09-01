@@ -2,9 +2,9 @@ package social.bigbone.rx
 
 import io.reactivex.rxjava3.core.Single
 import social.bigbone.MastodonClient
+import social.bigbone.api.entity.FileAsMediaAttachment
 import social.bigbone.api.entity.MediaAttachment
 import social.bigbone.api.entity.data.Focus
-import social.bigbone.api.method.FileAsMediaAttachment
 import social.bigbone.api.method.MediaMethods
 import java.io.File
 

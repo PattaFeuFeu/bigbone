@@ -6,6 +6,7 @@ import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
@@ -737,6 +738,30 @@ class MastodonClient private constructor(
                     url = url,
                     method = "PATCH",
                     body = parameterBody(body)
+                )
+            )
+            return call.execute()
+        } catch (e: IOException) {
+            throw BigBoneRequestException("Request not executed due to network IO issue", e)
+        }
+    }
+
+    /**
+     * Get a response from the Mastodon instance defined for this client using the PATCH method.
+     * This function supports multipart/form-data requests.
+     *
+     * @param path an absolute path to the API endpoint to call
+     * @param body the multipart body containing the form fields
+     */
+    fun patchMultipart(path: String, body: MultipartBody): Response {
+        try {
+            val url = fullUrl(scheme, getInstance().domain, port, path)
+            debugPrintUrl(url)
+            val call = client.newCall(
+                Request(
+                    url = url,
+                    method = "PATCH",
+                    body = body
                 )
             )
             return call.execute()
