@@ -51,10 +51,10 @@ class InstanceMethodsTest {
         val instance = instanceMethods.getInstance().execute()
         instance.domain shouldBeEqualTo "mastodon.social"
         instance.title shouldBeEqualTo "Mastodon"
-        instance.version shouldBeEqualTo "4.4.0-alpha.3"
+        instance.version shouldBeEqualTo "4.5.0-nightly.2025-07-11"
         instance.sourceUrl shouldBeEqualTo "https://github.com/mastodon/mastodon"
         instance.description shouldBeEqualTo "The original server operated by the Mastodon gGmbH non-profit"
-        instance.usage.users.activeMonth shouldBeEqualTo 123_122
+        instance.usage.users.activeMonth shouldBeEqualTo 279_347
 
         with(instance.thumbnail) {
             url shouldBeEqualTo "https://files.mastodon.social/site_uploads/files/000/000/001/@1x/57c12f441d083cde.png"
@@ -64,15 +64,23 @@ class InstanceMethodsTest {
                 resolution1x.shouldNotBeNull()
                 resolution2x.shouldNotBeNull()
             }
+            description shouldBeEqualTo "Colourful illustration of a Mastodon (a sort of elephant) " +
+                "carrying a bindle and joining a group of other Mastodons. " +
+                "The other Mastodons have many different colours and are holding up a Welcome sign."
         }
 
         with(instance.icon) {
-            size shouldBeEqualTo 4
-            get(0).src shouldBeEqualTo "https://files.mastodon.social/site_uploads/files/000/000/003/36/accf17b0104f18e5.png"
+            size shouldBeEqualTo 9
+            get(0).src shouldBeEqualTo "https://mastodon.social/packs/assets/android-chrome-36x36-DLiBQg3N.png"
             get(0).size shouldBeEqualTo Dimension(width = 36, height = 36)
-            get(1).size shouldBeEqualTo Dimension(width = 72, height = 72)
-            get(2).size shouldBeEqualTo Dimension(width = 192, height = 192)
-            get(3).size shouldBeEqualTo Dimension(width = 512, height = 512)
+            get(1).size shouldBeEqualTo Dimension(width = 48, height = 48)
+            get(2).size shouldBeEqualTo Dimension(width = 72, height = 72)
+            get(3).size shouldBeEqualTo Dimension(width = 96, height = 96)
+            get(4).size shouldBeEqualTo Dimension(width = 144, height = 144)
+            get(5).size shouldBeEqualTo Dimension(width = 192, height = 192)
+            get(6).size shouldBeEqualTo Dimension(width = 256, height = 256)
+            get(7).size shouldBeEqualTo Dimension(width = 384, height = 384)
+            get(8).size shouldBeEqualTo Dimension(width = 512, height = 512)
         }
 
         with(instance.languages) {
@@ -82,15 +90,20 @@ class InstanceMethodsTest {
 
         val config = instance.configuration
         with(config.urls) {
-            streaming shouldBeEqualTo "wss://mastodon.social"
+            streaming shouldBeEqualTo "wss://streaming.mastodon.social"
             about shouldBeEqualTo "https://mastodon.social/about"
             privacyPolicy shouldBeEqualTo "https://mastodon.social/privacy-policy"
-            termsOfService shouldBeEqualTo "https://mastodon.social/terms-of-service"
+            termsOfService.shouldBeNull()
         }
         config.vapid.publicKey shouldNotBe null
         with(config.accounts) {
+            maxDisplayNameLength shouldBeEqualTo 30
+            maxNoteLength shouldBeEqualTo 500
             maxFeaturedTags shouldBeEqualTo 10
-            maxPinnedStatuses shouldBeEqualTo 4
+            maxPinnedStatuses shouldBeEqualTo 5
+            maxProfileFields shouldBeEqualTo 4
+            profileFieldNameLimit shouldBeEqualTo 255
+            profileFieldValueLimit shouldBeEqualTo 255
         }
         with(config.statuses) {
             maxCharacters shouldBeEqualTo 500
@@ -98,13 +111,13 @@ class InstanceMethodsTest {
             charactersReservedPerUrl shouldBeEqualTo 23
         }
         with(config.mediaAttachments) {
-            supportedMimeTypes shouldHaveSize 27
+            supportedMimeTypes shouldHaveSize 28
             descriptionLimit shouldBeEqualTo 1500
-            imageSizeLimit shouldBeEqualTo 10_485_760
-            imageMatrixLimit shouldBeEqualTo 16_777_216
-            videoSizeLimit shouldBeEqualTo 41_943_040
-            videoFrameRateLimit shouldBeEqualTo 60
-            videoMatrixLimit shouldBeEqualTo 2_304_000
+            imageSizeLimit shouldBeEqualTo 16_777_216
+            imageMatrixLimit shouldBeEqualTo 33_177_600
+            videoSizeLimit shouldBeEqualTo 103_809_024
+            videoFrameRateLimit shouldBeEqualTo 120
+            videoMatrixLimit shouldBeEqualTo 8_294_400
         }
         with(config.polls) {
             maxOptions shouldBeEqualTo 4
@@ -115,18 +128,18 @@ class InstanceMethodsTest {
         config.translation.enabled shouldBeEqualTo true
 
         with(instance.registrations) {
-            enabled shouldBeEqualTo false
+            enabled shouldBeEqualTo true
             approvalRequired shouldBeEqualTo false
             reasonRequired shouldBeEqualTo false
             minAge shouldBeEqualTo 16
             message.shouldBeNull()
         }
-        instance.apiVersions.mastodon shouldBeEqualTo 1
+        instance.apiVersions.mastodon shouldBeEqualTo 6
 
         with(instance.contact) {
             email shouldBeEqualTo "staff@mastodon.social"
             with(account) {
-                id shouldBeEqualTo "1"
+                id shouldBeEqualTo "13179"
                 emojis.isEmpty() shouldBeEqualTo true
             }
         }
@@ -134,7 +147,7 @@ class InstanceMethodsTest {
         with(instance.rules) {
             size shouldBeEqualTo 6
             get(0).id shouldBeEqualTo "1"
-            get(0).text shouldBeEqualTo "Sexually explicit or violent media must be marked as sensitive when posting"
+            get(0).text shouldBeEqualTo "Sexually explicit or violent media must be marked as sensitive or with a content warning"
         }
 
         verify {

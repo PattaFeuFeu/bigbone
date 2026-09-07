@@ -93,7 +93,14 @@ data class Instance(
      * An itemized list of rules for this website.
      */
     @SerialName("rules")
-    val rules: List<Rule> = emptyList()
+    val rules: List<Rule> = emptyList(),
+
+    /**
+     * The current Wrapstodon (Annual report) campaign identifier (year), if any.
+     * @since Mastodon 4.6.0
+     */
+    @SerialName("wrapstodon")
+    val wrapstodon: String? = null
 ) {
     /**
      * Usage data for this instance.
@@ -144,7 +151,14 @@ data class Instance(
          * @see <a href="https://docs.joinmastodon.org/entities/Instance/#thumbnail-versions">Mastodon API Instance/#thumbnail-versions</a>
          */
         @SerialName("versions")
-        val versions: Versions? = null
+        val versions: Versions? = null,
+
+        /**
+         * The thumbnail’s alt text (a description of the image to help people with visual impairments understand its content).
+         * @since Mastodon 4.6.0
+         */
+        @SerialName("description")
+        val description: String = "",
     ) {
         /**
          * Links to scaled resolution images, for high DPI screens.
@@ -285,6 +299,7 @@ data class Instance(
         data class Accounts(
             /**
              * The maximum number of featured tags allowed for each account.
+             * @since Mastodon 4.0.0
              */
             @SerialName("max_featured_tags")
             val maxFeaturedTags: Int = 0,
@@ -295,6 +310,55 @@ data class Instance(
              */
             @SerialName("max_pinned_statuses")
             val maxPinnedStatuses: Int = 0,
+
+            /**
+             * The maximum length allowed for an account’s display name.
+             * @since Mastodon 4.6.0
+             */
+            @SerialName("max_display_name_length")
+            val maxDisplayNameLength: Int = 0,
+
+            /**
+             * The maximum length allowed for an account’s bio.
+             * @since Mastodon 4.6.0
+             */
+            @SerialName("max_note_length")
+            val maxNoteLength: Int = 0,
+
+            /**
+             * The maximum length allowed for an account’s avatar description.
+             * @since Mastodon 4.6.0
+             */
+            @SerialName("max_avatar_description_length")
+            val maxAvatarDescriptionLength: Int = 0,
+
+            /**
+             * The maximum length allowed for an account’s profile header description.
+             * @since Mastodon 4.6.0
+             */
+            @SerialName("max_header_description_length")
+            val maxHeaderDescriptionLength: Int = 0,
+
+            /**
+             * The maximum number of custom profile fields allowed to be set.
+             * @since Mastodon 4.6.0
+             */
+            @SerialName("max_profile_fields")
+            val maxProfileFields: Int = 0,
+
+            /**
+             * The maximum size of a profile field name, in characters.
+             * @since Mastodon 4.6.0
+             */
+            @SerialName("profile_field_name_limit")
+            val profileFieldNameLimit: Int = 0,
+
+            /**
+             * The maximum size of a profile field value, in characters.
+             * @since Mastodon 4.6.0
+             */
+            @SerialName("profile_field_value_limit")
+            val profileFieldValueLimit: Int = 0,
         )
 
         /**
