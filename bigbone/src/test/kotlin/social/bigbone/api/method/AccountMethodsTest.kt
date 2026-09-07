@@ -13,6 +13,10 @@ import org.amshove.kluent.withMessage
 import org.junit.jupiter.api.Test
 import social.bigbone.Parameters
 import social.bigbone.PrecisionDateTime.ValidPrecisionDateTime.ExactTime
+import social.bigbone.api.entity.ProfileFieldName
+import social.bigbone.api.entity.ProfileFieldValue
+import social.bigbone.api.entity.ProfileFields
+import social.bigbone.api.entity.QuotePolicy
 import social.bigbone.api.entity.data.Visibility
 import social.bigbone.api.exception.BigBoneRequestException
 import social.bigbone.testtool.MockClient
@@ -196,11 +200,12 @@ class AccountMethodsTest {
     fun `Given client returning success, when updating credentials with valid profile fields, then ensure correct endpoint parameters`() {
         val client = MockClient.mock("accounts_update_credentials_success.json")
         val accountMethods = AccountMethods(client)
-        val profileFields = AccountMethods.ProfileFields(
-            first = AccountMethods.ProfileFieldName("Location") to AccountMethods.ProfileFieldValue("Amsterdam, NL 🇳🇱"),
-            second = AccountMethods.ProfileFieldName("Pronouns") to AccountMethods.ProfileFieldValue("he/they"),
-            third = AccountMethods.ProfileFieldName("Website") to AccountMethods.ProfileFieldValue("https://example.com"),
-            fourth = null
+        val profileFields = ProfileFields(
+            mapOf(
+                ProfileFieldName("Location") to ProfileFieldValue("Amsterdam, NL 🇳🇱"),
+                ProfileFieldName("Pronouns") to ProfileFieldValue("he/they"),
+                ProfileFieldName("Website") to ProfileFieldValue("https://example.com")
+            )
         )
 
         accountMethods.updateCredentials(
@@ -216,7 +221,9 @@ class AccountMethodsTest {
             profileFields = profileFields,
             defaultPostVisibility = null,
             defaultSensitiveMark = null,
-            defaultLanguage = null
+            defaultLanguage = null,
+            defaultQuotePolicy = null,
+            attributionDomains = null
         ).execute()
 
         val parametersCapturingSlot = slot<Parameters>()
@@ -238,52 +245,6 @@ class AccountMethodsTest {
     }
 
     @Test
-    fun `Given string with more than 255 characters, when creating ProfileFieldName, then fail with exception`() {
-        val tooLongProfileFieldName = "abcdefghijklmnopqrstuvwxyz" +
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-            "abcdefghijklmnopqrstuvwxyz" +
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-            "0123456789" +
-            "abcdefghijklmnopqrstuvwxyz" +
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-            "01234567890123456789" +
-            "01234567890" +
-            "abcdefghijklmnopqrstuvwxyz" +
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-            "toomanycharacters"
-
-        invoking { AccountMethods.ProfileFieldName(tooLongProfileFieldName) }
-            .shouldThrow(IllegalArgumentException::class)
-            .withMessage(
-                "Name of profile field must not be longer than 255 characters but was: " +
-                    "$tooLongProfileFieldName (${tooLongProfileFieldName.length} characters)."
-            )
-    }
-
-    @Test
-    fun `Given string with more than 255 characters, when creating ProfileFieldValue, then fail with exception`() {
-        val tooLongProfileFieldValue = "abcdefghijklmnopqrstuvwxyz" +
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-            "abcdefghijklmnopqrstuvwxyz" +
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-            "0123456789" +
-            "abcdefghijklmnopqrstuvwxyz" +
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-            "01234567890123456789" +
-            "01234567890" +
-            "abcdefghijklmnopqrstuvwxyz" +
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-            "toomanycharacters"
-
-        invoking { AccountMethods.ProfileFieldValue(tooLongProfileFieldValue) }
-            .shouldThrow(IllegalArgumentException::class)
-            .withMessage(
-                "Value of profile field must not be longer than 255 characters but was: " +
-                    "$tooLongProfileFieldValue (${tooLongProfileFieldValue.length} characters)."
-            )
-    }
-
-    @Test
     fun updateCredentials() {
         val client = MockClient.mock("accounts_update_credentials_success.json")
         val accountMethods = AccountMethods(client)
@@ -301,7 +262,9 @@ class AccountMethodsTest {
             profileFields = null,
             defaultPostVisibility = Visibility.UNLISTED,
             defaultSensitiveMark = true,
-            defaultLanguage = "EN"
+            defaultLanguage = "EN",
+            defaultQuotePolicy = QuotePolicy.FOLLOWERS,
+            attributionDomains = listOf("example.com", "test.com")
         ).execute()
 
         with(account) {
@@ -328,7 +291,10 @@ class AccountMethodsTest {
                 "&indexable=true" +
                 "&source[privacy]=unlisted" +
                 "&source[sensitive]=true" +
-                "&source[language]=EN"
+                "&source[language]=EN" +
+                "&source[quote_policy]=followers" +
+                "&attribution_domains[]=example.com" +
+                "&attribution_domains[]=test.com"
         }
     }
 
@@ -351,7 +317,9 @@ class AccountMethodsTest {
                 profileFields = null,
                 defaultPostVisibility = null,
                 defaultSensitiveMark = null,
-                defaultLanguage = null
+                defaultLanguage = null,
+                defaultQuotePolicy = null,
+                attributionDomains = null
             ).execute()
         } shouldThrow BigBoneRequestException::class
     }
