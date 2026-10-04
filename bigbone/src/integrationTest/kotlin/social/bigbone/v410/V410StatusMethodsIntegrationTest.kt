@@ -25,6 +25,7 @@ import social.bigbone.api.entity.data.Visibility
 import social.bigbone.api.exception.BigBoneRequestException
 import java.time.Instant
 import java.time.temporal.ChronoUnit
+import java.util.stream.Collectors
 
 /**
  * Integration tests for StatusMethods running on Mastodon 4.1.0.
@@ -558,6 +559,147 @@ class V410StatusMethodsIntegrationTest {
                 user1Client.statuses.getStatus(statusId).execute()
             }
             assertEquals(404, exception.httpStatusCode)
+        }
+    }
+
+    @Nested
+    @DisplayName("editStatus tests")
+    internal inner class EditStatusTests {
+        @Test
+        fun `should edit status when mandatory params set`() {
+            // given
+            val user1Client = TestHelpers.getTrustAllClient(user1UserToken.accessToken)
+            val statusId = user1Client.statuses.postStatus(status = "This post will be edited soon").execute().id
+
+            // when
+            val editedStatus = user1Client.statuses.editStatus(statusId, "This is the edited status text").execute()
+
+            // then
+            assertEquals("<p>This is the edited status text</p>", editedStatus.content)
+            assertEquals(Status.Visibility.Public.value, editedStatus.visibility)
+            assertNull(editedStatus.inReplyToId)
+            assertEquals(0, editedStatus.mediaAttachments.size)
+            assertFalse(editedStatus.isSensitive)
+            assertEquals("", editedStatus.spoilerText)
+            assertEquals("en", editedStatus.language)
+        }
+
+        @Test
+        fun `should edit status when all params set`() {
+            // given
+            val user1Client = TestHelpers.getTrustAllClient(user1UserToken.accessToken)
+            val statusId = user1Client.statuses.postStatus(status = "This post will be edited soon").execute().id
+            val uploadedMediaId1 = TestHelpers.uploadMediaFromResourcesFolder("castle-1280x853.jpg", "image/jpg", user1Client).id
+            val uploadedMediaId2 = TestHelpers.uploadMediaFromResourcesFolder("castle-1280x853.jpg", "image/jpg", user1Client).id
+
+            // when
+            val editedStatus = user1Client.statuses.editStatus(
+                statusId = statusId,
+                status = "Das ist der bearbeitete Statustext",
+                mediaIds = listOf(uploadedMediaId1, uploadedMediaId2),
+                sensitive = true,
+                spoilerText = "Das ist der Spoilertext",
+                language = "de").execute()
+
+            // then
+            assertEquals("<p>Das ist der bearbeitete Statustext</p>", editedStatus.content)
+            assertEquals(Status.Visibility.Public.value, editedStatus.visibility)
+            assertEquals(2, editedStatus.mediaAttachments.size)
+            assertTrue(editedStatus.isSensitive)
+            assertEquals("Das ist der Spoilertext", editedStatus.spoilerText)
+            assertEquals("de", editedStatus.language)
+        }
+
+        @Test
+        fun `should not reset poll if status is edited`() {
+            // given
+            val user1Client = TestHelpers.getTrustAllClient(user1UserToken.accessToken)
+            val statusId = user1Client.statuses.postPoll(
+                status = "Do you think this test will pass?",
+                pollOptions = listOf("Yes", "No"),
+                pollExpiresIn = 300
+            ).execute().id
+
+            // when
+            val editedPoll = user1Client.statuses.editStatus(
+                statusId = statusId,
+                status = "Do you really think this test will pass?",
+            ).execute()
+
+            val editedPoll2 = user1Client.statuses.getStatus(statusId).execute()
+
+            // then
+            assertEquals("<p>Do you really think this test will pass?</p>", editedPoll2.content)
+            assertIterableEquals(listOf("Yes", "No"), editedPoll2.poll!!.options.stream().map { it.title }.collect(Collectors.toList()))
+            assertEquals(Status.Visibility.Public.value, editedPoll2.visibility)
+            assertEquals(0, editedPoll2.mediaAttachments.size)
+            assertFalse(editedPoll2.isSensitive)
+            assertEquals("", editedPoll2.spoilerText)
+            assertEquals("en", editedPoll2.language)
+        }
+    }
+
+    @Nested
+    @DisplayName("editPoll tests")
+    internal inner class EditPollTests {
+        @Test
+        fun `should edit poll when mandatory params set`() {
+            // given
+            val user1Client = TestHelpers.getTrustAllClient(user1UserToken.accessToken)
+            val statusId = user1Client.statuses.postPoll(
+                status = "Do you think this test will pass?",
+                pollOptions = listOf("Yes", "No"),
+                pollExpiresIn = 300
+            ).execute().id
+
+            // when
+            val editedPoll = user1Client.statuses.editPoll(
+                statusId = statusId,
+                status = "Do you really think this test will pass?",
+                pollOptions = listOf("Yes", "No", "Eventually"),
+                pollExpiresIn = 500).execute()
+
+            // then
+            assertEquals("<p>Do you really think this test will pass?</p>", editedPoll.content)
+            assertIterableEquals(listOf("Yes", "No", "Eventually"), editedPoll.poll!!.options.stream().map { it.title }.collect(Collectors.toList()))
+            assertEquals(Status.Visibility.Public.value, editedPoll.visibility)
+            assertEquals(0, editedPoll.mediaAttachments.size)
+            assertFalse(editedPoll.isSensitive)
+            assertEquals("", editedPoll.spoilerText)
+            assertEquals("en", editedPoll.language)
+        }
+
+        @Test
+        fun `should edit poll when all params set`() {
+            // given
+            val user1Client = TestHelpers.getTrustAllClient(user1UserToken.accessToken)
+            val statusId = user1Client.statuses.postPoll(
+                status = "Do you think this test will pass?",
+                pollOptions = listOf("Yes", "No"),
+                pollExpiresIn = 300
+            ).execute().id
+
+            // when
+            val editedPoll = user1Client.statuses.editPoll(
+                statusId = statusId,
+                status = "Denkst Du wirklich dass dieser Test erfolgreich sein wird?",
+                pollOptions = listOf("Ja", "Nein", "Vielleicht"),
+                pollExpiresIn = 500,
+                pollMultiple = true,
+                pollHideTotals = true,
+                sensitive = true,
+                spoilerText = "Das ist der Spoilertext",
+                language = "de").execute()
+
+            // then
+            assertEquals("<p>Denkst Du wirklich dass dieser Test erfolgreich sein wird?</p>", editedPoll.content)
+            assertIterableEquals(listOf("Ja", "Nein", "Vielleicht"), editedPoll.poll!!.options.stream().map { it.title }.collect(Collectors.toList()))
+            assertEquals(Status.Visibility.Public.value, editedPoll.visibility)
+            assertEquals(0, editedPoll.mediaAttachments.size)
+            assertTrue(editedPoll.poll!!.multiple)
+            assertTrue(editedPoll.isSensitive)
+            assertEquals("Das ist der Spoilertext", editedPoll.spoilerText)
+            assertEquals("de", editedPoll.language)
         }
     }
 
