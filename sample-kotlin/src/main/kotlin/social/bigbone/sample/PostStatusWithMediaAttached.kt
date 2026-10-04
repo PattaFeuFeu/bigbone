@@ -1,8 +1,8 @@
 package social.bigbone.sample
 
 import social.bigbone.MastodonClient
+import social.bigbone.api.entity.FileAsMediaAttachment
 import social.bigbone.api.entity.data.Visibility
-import social.bigbone.api.method.FileAsMediaAttachment
 import java.io.File
 
 object PostStatusWithMediaAttached {

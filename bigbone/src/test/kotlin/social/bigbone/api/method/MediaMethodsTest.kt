@@ -13,6 +13,7 @@ import org.amshove.kluent.shouldNotBeNull
 import org.amshove.kluent.shouldNotBeNullOrBlank
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import social.bigbone.api.entity.FileAsMediaAttachment
 import social.bigbone.api.entity.MediaAttachment
 import social.bigbone.api.entity.data.Focus
 import social.bigbone.api.exception.BigBoneRequestException

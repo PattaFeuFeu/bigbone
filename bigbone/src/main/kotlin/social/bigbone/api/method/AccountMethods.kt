@@ -11,6 +11,8 @@ import social.bigbone.api.entity.FamiliarFollowers
 import social.bigbone.api.entity.FeaturedTag
 import social.bigbone.api.entity.Instance
 import social.bigbone.api.entity.MastodonList
+import social.bigbone.api.entity.ProfileFields
+import social.bigbone.api.entity.QuotePolicy
 import social.bigbone.api.entity.Relationship
 import social.bigbone.api.entity.Status
 import social.bigbone.api.entity.Token
@@ -86,58 +88,6 @@ class AccountMethods(private val client: MastodonClient) {
     }
 
     /**
-     * Name of a profile field used in [ProfileFields].
-     * Must not be longer than 255 characters.
-     */
-    @JvmInline
-    value class ProfileFieldName(val name: String) {
-        init {
-            require(name.length <= 255) {
-                "Name of profile field must not be longer than 255 characters but was: $name (${name.length} characters)."
-            }
-        }
-    }
-
-    /**
-     * Value of a profile field used in [ProfileFields].
-     * Must not be longer than 255 characters.
-     */
-    @JvmInline
-    value class ProfileFieldValue(val value: String) {
-        init {
-            require(value.length <= 255) {
-                "Value of profile field must not be longer than 255 characters but was: $value (${value.length} characters)."
-            }
-        }
-    }
-
-    /**
-     * Profile fields that can be set in [updateCredentials].
-     *
-     * At most four fields are allowed. Each of them has a max key and value length of 255 characters.
-     */
-    data class ProfileFields(
-        val first: Pair<ProfileFieldName, ProfileFieldValue>? = null,
-        val second: Pair<ProfileFieldName, ProfileFieldValue>? = null,
-        val third: Pair<ProfileFieldName, ProfileFieldValue>? = null,
-        val fourth: Pair<ProfileFieldName, ProfileFieldValue>? = null
-    ) {
-        fun toParameters(parameters: Parameters = Parameters()): Parameters {
-            fun appendField(index: Int, name: ProfileFieldName, value: ProfileFieldValue) {
-                parameters.append("fields_attributes[$index][name]", name.name)
-                parameters.append("fields_attributes[$index][value]", value.value)
-            }
-
-            return parameters.apply {
-                first?.let { (name, value) -> appendField(0, name, value) }
-                second?.let { (name, value) -> appendField(1, name, value) }
-                third?.let { (name, value) -> appendField(2, name, value) }
-                fourth?.let { (name, value) -> appendField(3, name, value) }
-            }
-        }
-    }
-
-    /**
      * Update the user’s display and preferences.
      *
      * You should use [verifyCredentials] to first obtain plaintext representations from within the source parameter,
@@ -159,6 +109,8 @@ class AccountMethods(private val client: MastodonClient) {
      * @param defaultPostVisibility Default post privacy for authored statuses
      * @param defaultSensitiveMark Whether to mark authored statuses as sensitive by default
      * @param defaultLanguage Default language to use for authored statuses (ISO 6391)
+     * @param defaultQuotePolicy Default quote policy for new posts
+     * @param attributionDomains Domains of websites allowed to credit the account. Maximum of 10 domains.
      *
      * @see <a href="https://docs.joinmastodon.org/methods/accounts/#update_credentials">Mastodon API documentation: methods/accounts/#update_credentials</a>
      */
@@ -175,7 +127,9 @@ class AccountMethods(private val client: MastodonClient) {
         profileFields: ProfileFields?,
         defaultPostVisibility: Visibility?,
         defaultSensitiveMark: Boolean?,
-        defaultLanguage: String?
+        defaultLanguage: String?,
+        defaultQuotePolicy: QuotePolicy?,
+        attributionDomains: List<String>?
     ): MastodonRequest<CredentialAccount> {
         return client.getMastodonRequest(
             endpoint = "$endpoint/update_credentials",
@@ -197,6 +151,9 @@ class AccountMethods(private val client: MastodonClient) {
                 defaultPostVisibility?.let { append("source[privacy]", defaultPostVisibility.apiName) }
                 defaultSensitiveMark?.let { append("source[sensitive]", defaultSensitiveMark) }
                 defaultLanguage?.let { append("source[language]", defaultLanguage) }
+                defaultQuotePolicy?.let { append("source[quote_policy]", defaultQuotePolicy.apiName) }
+
+                attributionDomains?.let { append("attribution_domains", attributionDomains) }
             }
         )
     }
