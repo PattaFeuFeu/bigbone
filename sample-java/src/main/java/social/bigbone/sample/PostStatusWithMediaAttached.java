@@ -4,7 +4,7 @@ import social.bigbone.MastodonClient;
 import social.bigbone.api.entity.MediaAttachment;
 import social.bigbone.api.entity.data.Visibility;
 import social.bigbone.api.exception.BigBoneRequestException;
-import social.bigbone.api.method.FileAsMediaAttachment;
+import social.bigbone.api.entity.FileAsMediaAttachment;
 
 import java.io.File;
 import java.util.Collections;
