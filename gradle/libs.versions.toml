@@ -17,7 +17,7 @@ rxjava = "3.1.12"
 # Gradle plugins
 jacoco = "0.8.9"
 dependency-analysis = "3.19.2"
-detekt = "1.23.8"
+detekt = "2.0.0-alpha.6"
 versions = "0.66.0"
 ktlint = "12.3.0"
 nmcp-aggregation = "1.6.2"
@@ -42,7 +42,7 @@ rxjava = { module = "io.reactivex.rxjava3:rxjava", version.ref = "rxjava" }
 kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependency-analysis" }
-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+detekt = { id = "dev.detekt", version.ref = "detekt" }
 versions = { id = "com.github.ben-manes.versions", version.ref = "versions" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 nmcp-aggregation = { id = "com.gradleup.nmcp.aggregation", version.ref = "nmcp-aggregation" }
