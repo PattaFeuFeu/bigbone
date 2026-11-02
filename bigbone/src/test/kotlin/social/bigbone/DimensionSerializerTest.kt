@@ -1,8 +1,11 @@
 package social.bigbone
 
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.json.JsonDecodingException
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeInstanceOf
+import org.amshove.kluent.shouldContain
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
@@ -37,56 +40,64 @@ class DimensionSerializerTest {
         decodedDimension shouldBeEqualTo dimension
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     @Test
-    fun `Given a dimension string without x separator, when decoding from string, then throw IllegalArgumentException`() {
+    fun `Given a dimension string without x separator, when decoding from string, then throw decoding exception`() {
         val jsonString = "\"800600\""
 
-        val exception = assertThrows<IllegalArgumentException> {
+        val exception = assertThrows<JsonDecodingException> {
             JSON_SERIALIZER.decodeFromString<Dimension>(jsonString)
         }
-        exception.message shouldBeEqualTo "Invalid dimension format: 800600. Expected format: widthxheight"
-        exception.cause shouldBe null
+        exception.message shouldContain "Invalid dimension format: 800600. Expected format: widthxheight"
+        exception.cause shouldBeInstanceOf IllegalArgumentException::class
+        exception.cause?.cause shouldBe null
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     @Test
-    fun `Given a dimension string with non-integer width, when decoding from string, then throw IllegalArgumentException`() {
+    fun `Given a dimension string with non-integer width, when decoding from string, then throw decoding exception`() {
         val jsonString = "\"abcx600\""
 
-        val exception = assertThrows<IllegalArgumentException> {
+        val exception = assertThrows<JsonDecodingException> {
             JSON_SERIALIZER.decodeFromString<Dimension>(jsonString)
         }
-        exception.message shouldBeEqualTo "Invalid dimension values in: abcx600. Width and height must be integers."
-        exception.cause shouldBeInstanceOf NumberFormatException::class
+        exception.message shouldContain "Invalid dimension values in: abcx600. Width and height must be integers."
+        exception.cause shouldBeInstanceOf IllegalArgumentException::class
+        exception.cause?.cause shouldBeInstanceOf NumberFormatException::class
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     @Test
-    fun `Given a dimension string with non-integer height, when decoding from string, then throw IllegalArgumentException`() {
+    fun `Given a dimension string with non-integer height, when decoding from string, then throw decoding exception`() {
         val jsonString = "\"800xabc\""
 
-        val exception = assertThrows<IllegalArgumentException> {
+        val exception = assertThrows<JsonDecodingException> {
             JSON_SERIALIZER.decodeFromString<Dimension>(jsonString)
         }
-        exception.message shouldBeEqualTo "Invalid dimension values in: 800xabc. Width and height must be integers."
-        exception.cause shouldBeInstanceOf NumberFormatException::class
+        exception.message shouldContain "Invalid dimension values in: 800xabc. Width and height must be integers."
+        exception.cause shouldBeInstanceOf IllegalArgumentException::class
+        exception.cause?.cause shouldBeInstanceOf NumberFormatException::class
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     @Test
-    fun `Given a dimension string with too many x separators, when decoding from string, then throw IllegalArgumentException`() {
+    fun `Given a dimension string with too many x separators, when decoding from string, then throw decoding exception`() {
         val jsonString = "\"800x600x400\""
 
-        val exception = assertThrows<IllegalArgumentException> {
+        val exception = assertThrows<JsonDecodingException> {
             JSON_SERIALIZER.decodeFromString<Dimension>(jsonString)
         }
-        exception.message shouldBeEqualTo "Invalid dimension format: 800x600x400. Expected format: widthxheight"
+        exception.message shouldContain "Invalid dimension format: 800x600x400. Expected format: widthxheight"
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     @Test
-    fun `Given a dimension string with negative width, when decoding from string, then throw IllegalArgumentException`() {
+    fun `Given a dimension string with negative width, when decoding from string, then throw decoding exception`() {
         val jsonString = "\"-800x600\""
 
-        val exception = assertThrows<IllegalArgumentException> {
+        val exception = assertThrows<JsonDecodingException> {
             JSON_SERIALIZER.decodeFromString<Dimension>(jsonString)
         }
-        exception.message shouldBeEqualTo "Width must be greater than 0, but was -800"
+        exception.message shouldContain "Width must be greater than 0, but was -800"
     }
 }
