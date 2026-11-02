@@ -1,31 +1,16 @@
-build:
-  maxIssues: 0
-
 config:
   validation: true
   warningsAsErrors: false
   checkExhaustiveness: false
   # when writing own rules with new properties, exclude the property path e.g.: 'my_rule_set,.*>.*>[my_property]'
-  excludes: [ '' ]
-
-processors:
-  active: true
-  exclude:
-    - 'DetektProgressListener'
+  excludes: [ ]
 
 console-reports:
   active: true
   exclude:
-     - 'ProjectStatisticsReport'
-     - 'ComplexityReport'
-     - 'NotificationReport'
-
-output-reports:
-  active: true
-  exclude:
-   - 'TxtOutputReport'
-   - 'HtmlOutputReport'
-   - 'MdOutputReport'
+    - 'ProjectStatisticsReport'
+    - 'ComplexityReport'
+    - 'NotificationReport'
 
 comments:
   DeprecatedBlockTag:
@@ -34,19 +19,19 @@ comments:
     active: true
   KDocReferencesNonPublicProperty:
     active: true
-    excludes: ['**/test/**']
+    excludes: [ '**/test/**' ]
   OutdatedDocumentation:
     active: true
   UndocumentedPublicClass:
     active: true
-    excludes: ['**/test/**', '**/sample/**']
+    excludes: [ '**/test/**', '**/sample/**' ]
     ignoreDefaultCompanionObject: true
   UndocumentedPublicFunction:
     active: false    # ***** ENABLE! *****
-    excludes: ['**/test/**']
+    excludes: [ '**/test/**' ]
   UndocumentedPublicProperty:
     active: false    # ***** ENABLE! *****
-    excludes: ['**/test/**']
+    excludes: [ '**/test/**' ]
     searchProtectedProperty: false
 
 complexity:
@@ -66,11 +51,9 @@ complexity:
     active: true
   NestedScopeFunctions:
     active: true
-  ReplaceSafeCallChainWithRun:
-    active: true
   StringLiteralDuplication:
     active: false   # ***** ENABLE! *****
-    excludes: ['**/test/**']
+    excludes: [ '**/test/**' ]
 
 coroutines:
   GlobalCoroutineUsage:
@@ -93,11 +76,11 @@ exceptions:
 naming:
   BooleanPropertyNaming:
     active: true
-  FunctionMaxLength:
+  FunctionNameMaxLength:
     active: true
     maximumFunctionNameLength: 50
-    excludes: ['**/test/**', '**/integrationTest/**']
-  FunctionMinLength:
+    excludes: [ '**/test/**', '**/integrationTest/**' ]
+  FunctionNameMinLength:
     active: true
   VariableMaxLength:
     active: true
@@ -105,8 +88,6 @@ naming:
     active: true
 
 performance:
-  CouldBeSequence:
-    active: true
   UnnecessaryPartOfBinaryExpression:
     active: true
 
@@ -116,8 +97,6 @@ potential-bugs:
   CastToNullableType:
     active: true
   Deprecation:
-    active: true
-  DontDowncastCollectionTypes:
     active: true
   ElseCaseInsteadOfExhaustiveWhen:
     active: true
@@ -129,7 +108,7 @@ potential-bugs:
     active: true
   MissingPackageDeclaration:
     active: true
-    excludes: ['**/*.kts']
+    excludes: [ '**/*.kts' ]
   NullCheckOnMutableProperty:
     active: true
   NullableToStringCall:
@@ -142,8 +121,6 @@ potential-bugs:
     active: true
 
 style:
-  AlsoCouldBeApply:
-    active: true
   BracesOnIfStatements:
     active: true
     singleLine: never
@@ -187,22 +164,18 @@ style:
     active: true
   OptionalUnit:
     active: true
-  PreferToOverPairSyntax:
-    active: true
   RedundantExplicitType:
     active: true
-  RedundantVisibilityModifierRule:
+  RedundantVisibilityModifier:
     active: true
-  SpacingBetweenPackageAndImports:
+  SpacingAfterPackageAndImports:
     active: true
   StringShouldBeRawString:
     active: true
-    excludes: ['**/test/**', '**/integrationTest/**']     # Remove in the future
+    excludes: [ '**/test/**', '**/integrationTest/**' ]     # Remove in the future
   TrailingWhitespace:
     active: true
   UnderscoresInNumericLiterals:
-    active: true
-  UnnecessaryAnnotationUseSiteTarget:
     active: true
   UnnecessaryBackticks:
     active: true
@@ -214,9 +187,9 @@ style:
     active: true
   UnnecessaryParentheses:
     active: true
-  UntilInsteadOfRangeTo:
+  RangeUntilInsteadOfRangeTo:
     active: true
-  UnusedImports:
+  UnusedImport:
     active: true
   UseDataClass:
     active: true
@@ -227,6 +200,4 @@ style:
   UseIfInsteadOfWhen:
     active: true
   UseLet:
-    active: true
-  UseSumOfInsteadOfFlatMapSize:
     active: true

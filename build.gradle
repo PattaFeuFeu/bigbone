@@ -1,8 +1,16 @@
+import dev.detekt.gradle.extensions.FailOnSeverity
+
 plugins {
     alias(libs.plugins.dependency.analysis)
     alias(libs.plugins.detekt)
     alias(libs.plugins.versions)
     alias(libs.plugins.nmcp.aggregation)
+}
+
+detekt {
+    config.setFrom("$projectDir/config/detekt/detekt.yml)")
+    buildUponDefaultConfig = true
+    failOnSeverity = FailOnSeverity.Info
 }
 
 nmcpAggregation {
